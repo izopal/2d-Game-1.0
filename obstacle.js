@@ -51,8 +51,7 @@ export default class Obstacle {
             ctx.fill    ();
         ctx.restore     (); 
         ctx.stroke      ();
-         // малюємо квадрат
-       
+        // малюємо квадрат
         ctx.strokeStyle = 'blue';
         ctx.strokeRect (this.x - this.obstacleWidth * .5,  
                         this.y - this.obstacleHeight * .5, 

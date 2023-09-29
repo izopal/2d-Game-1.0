@@ -25,6 +25,6 @@
     object-fit: cover; 
     pointer-events: none;
 }
-#obstacle{
+#obstacle, #bull{
     display: none;
 }

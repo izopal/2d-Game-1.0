@@ -5,14 +5,18 @@ const constants = { canvas:     {
                                     topMargin:            240,
                     }, 
                     
-                    player:     {
-                                    radius:               30,
+                    player:     {   width:                5900 / 59,
+                                    height:               800 / 8,
+                                    size:                 2,
+                                    maxFrameX:            59, 
+                                    maxFrameY:            8,
+                                    radius:               60,
                                     speedModifier:        30,           
                     },
 
                     obstacle:   {
-                                    width:                250,
-                                    height:               250,
+                                    width:                1000 / 4,
+                                    height:               750 / 3,
                                     size:                 .5,
                                     maxFrameX:            4, 
                                     maxFrameY:            3,

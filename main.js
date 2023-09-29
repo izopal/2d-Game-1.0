@@ -11,7 +11,7 @@ window.addEventListener('load',  function() {
           canvasMS.width   = constants.canvas.canvasWidth;
           canvasMS.height  = constants.canvas.canvasHeight;
     const ctx              = canvasMS.getContext('2d', { willReadFrequently: true });
-          ctx.fillStyle    = 'red';
+          ctx.fillStyle    = 'none';
           ctx.lineStroke   = 3;
           ctx.strokeStyle  = 'red';
 
