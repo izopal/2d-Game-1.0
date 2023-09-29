@@ -1,15 +1,15 @@
-import Player       from './player.js';
-import InputHandler from './input.js';
-import Obstacle     from './obstacle.js';
 import constants    from './constants.js';
+import Obstacle     from './obstacle.js';
+import Player       from './player.js';
+import Egg          from './egg.js';
     
 
 
 
 window.addEventListener('load',  function() { 
     const canvasMS         = document.getElementById('canvasMS');
-          canvasMS.width   = constants.canvas.canvasWidth;
-          canvasMS.height  = constants.canvas.canvasHeight;
+          canvasMS.width   = constants.game.canvasWidth;
+          canvasMS.height  = constants.game.canvasHeight;
     const ctx              = canvasMS.getContext('2d', { willReadFrequently: true });
           ctx.fillStyle    = 'none';
           ctx.lineStroke   = 3;
@@ -23,29 +23,49 @@ window.addEventListener('load',  function() {
             // параметри полотна
             this.width             = canvasMS.width;
             this.height            = canvasMS.height;
-            this.topMargin         = constants.canvas.topMargin;
-            // підключаємо модулі
+            this.topMargin         = constants.game.topMargin;
+            // параметри швидкості відображення кадрів
+            this.fps               = constants.game.fps;
+            this.frameInterval     = constants.game.timeInterval/this.fps;
+            this.frameTimer        = 0;
+            // підключаємо модуль персонажа
             this.player            = new Player(this);
-            this.input             = new InputHandler(canvasMS);
-            
 
-            // 
-            this.numberOffObstacles = constants.obstacle.numberOffObstacles;
+            // параметри першкод
+            this.numberOffObstacles = constants.obstacle.number;
             this.obstacles          = [];
-        }
-    
-        render(ctx){
-            this.player.draw(ctx);
-            this.player.update(this.input.mouse);
+            // 
+            this.eggInterval        = constants.egg.timeInterval/this.fps;
+            this.eggTimer           = 0;
+            this.numberOffEggs      = constants.egg.number;
+            this.eggs               = [];
+            // параметри конструктора
+            this.debug              = false;
 
-            this.obstacles.forEach(obstacle => obstacle.draw(ctx));
         }
+        resize(width, height){
+            // обновлюємо значення полотна
+            console.log('aaa')
+            // this.canvasSize.width   = width;
+            // this.canvasSize.height  = height;
+            // // обновлюємо значення парметрів
+            // this.width              = width;
+            // this.height             = height;
+            // // обновлюємо значення модулів
+            // this.player.reset();
+            // this.obstacles.forEach(obstacl => obstacl.reset());
+            // console.log('aa')
+        }
+        
         checkCollision(a, b){
             const dx           = a.x - b.x; 
             const dy           = a.y - b.y;
             const distance     = Math.hypot(dy, dx);
             const sumOffRadius = a.radius + b.radius;
             return [(distance < sumOffRadius), distance, sumOffRadius, dx, dy]
+        }
+        addEgg(){
+            this.eggs.push(new Egg(this))
         }
         init(){
             // умова щоб при генерації перешкод вони не перекривалися одна з одною
@@ -68,23 +88,57 @@ window.addEventListener('load',  function() {
                 //    firstObstacle.y < this.height - firstObstacle.radius * 2) 
                 if(!overlap)
                    this.obstacles.push(firstObstacle);
-                attempts++;
+                ++attempts;
             }
-            // for(let i = 0; i < this.numberOffObstacles; ++i){
-            //     this.obstacles.push(new Obstacle(this))
-            // }
+            // 
+            
+        }
+
+        draw(ctx){
+            // this.obstacles.forEach(obstacle => obstacle.draw(ctx));
+            // this.player.draw(ctx);
+            if([2, 3, 4, 5, 6].includes(this.player.frameY)){
+                this.player.draw(ctx);
+                this.obstacles.forEach(obstacle => obstacle.draw(ctx));
+            }else{
+                this.obstacles.forEach(obstacle => obstacle.draw(ctx));
+                this.player.draw(ctx);
+            }
+            this.eggs.forEach(egg => egg.draw(ctx));
+        }
+
+        render(ctx, deltaTime){
+            if (this.frameTimer > this.frameInterval) {
+                ctx.clearRect(0, 0, canvasMS.width, canvasMS.height);
+                this.draw(ctx);
+                this.player.update();
+                this.frameTimer = 0;
+            };
+
+            this.frameTimer += deltaTime;
+
+            if(this.eggTimer > this.eggInterval && this.eggs.length < this.numberOffEggs){
+                this.addEgg();
+                this.eggTimer = 0;
+            }else{
+                this.eggTimer += deltaTime;
+            };
+            
         }
     }
 
     const game = new Game(canvasMS, constants);
     game.init();
     console.log(game);
-        
-    function animate (){
-        ctx.clearRect(0, 0, canvasMS.width, canvasMS.height);
-        game.render(ctx);
+
+    let lastTime = 0 
+    function animate (timeStamp){
+        const deltaTime = timeStamp - lastTime;
+        lastTime = timeStamp;
+
+        game.render(ctx, deltaTime);
         requestAnimationFrame(animate)
     }
-    animate();
+    animate(0);
 
 });
