@@ -9,52 +9,64 @@ export default class Player {
         // паарметри зображення персонажа
         this.image         = document.getElementById('bull');
         // параметри початквого розміру кадру (frame) зображення для персонжа
-        this.width         = constants.player.width; 
-        this.height        = constants.player.height;
+        this.width         = constants.player.width ; 
+        this.height        = constants.player.height ;
         // параметри кінцевого розміру кадру (frame) зображення для персонажа
         this.size          = constants.player.size;
-        this.playerWidth   = this.width * this.size;
-        this.playerHeight  = this.height * this.size;
+        this.scale         = this.game.scale;
+        this.playerWidth   = this.width * this.size * this.scale;
+        this.playerHeight  = this.height * this.size * this.scale;
         // параметри розміщення і розмірів тіні персонажа
-        this.radius        = constants.player.radius;
+        this.radius        = constants.player.radius * this.scale;
         this.x             = this.game.width * .5;
         this.y             = this.game.height * .5;
         // параметри для зміни кадрів забраження персонажа
         this.frameX        = 0;
-        this.frameY        = 4;  
+        this.frameY        = 0;  
         this.maxFrameX     = constants.player.maxFrameX;
         this.maxFrameY     = constants.player.maxFrameY;  
         
         // параметри регулювання руху швидкості персонажа і мишки
         this.speedX        = 0;
         this.speedY        = 0;
-        this.speedModifier = constants.player.speedModifier;
+        this.speedModifier = constants.player.speedModifier * this.scale;
         this.dx            = 0;
         this.dy            = 0;
+
+       
     }
     reset(){
-
+        this.scale         = this.game.scale;
+        this.playerWidth   = this.width * this.size * this.scale;
+        this.playerHeight  = this.height * this.size * this.scale;
+        this.radius        = constants.player.radius * this.scale;
+        this.x             = this.game.width * .5;
+        this.y             = this.game.height * .5;
+        this.speedModifier = constants.player.speedModifier * this.scale;
+        console.log(this.speedModifier )
+        // this.x            ;
+        // this.y             ;
     }
     update(){
 
-        this.frameX = (this.frameX < this.maxFrameX) ? ++this.frameX : 0;
+        this.frameX = (this.frameX < this.maxFrameX - 1) ? ++this.frameX : 0;
       
         const dx           = this.input.mouse.x - this.x;         // визначаємо дистанцію по осі X між поточним і попереднім розміщенням курсора
         const dy           = this.input.mouse.y - this.y;         // визначаємо дистанцію по осі Y між поточним і попереднім розміщенням курсора
         const distance     = Math.hypot(dy, dx);        // ;
-        const angle        = Math.atan2(dy, dx) || 1.96;         
+        this.angle         = Math.atan2(dy, dx) || 1.96;         
         const a            = Math.PI * 2 / this.maxFrameY;        // кут частинки кола
         
         // блок зміни кадрів персонажа в залежності від кута розвороту
-        if     (angle < -a * .5 - a * 2)                   this.frameY = 7;    // вліво-верх
-        else if(angle < -a * .5 - a)                       this.frameY = 0;    // верх
-        else if(angle < -a * .5)                           this.frameY = 1;    // вправо-верх  
-        else if(angle <  a * .5)                           this.frameY = 2;    // вправо
-        else if(angle <  a * .5 + a)                       this.frameY = 3;    // вправо-низ
-        else if(angle <  a * .5 + a * 2)                   this.frameY = 4;    // низ
-        else if(angle <  a * .5 + a * 3)                   this.frameY = 5;    // вліво-вниз
-        else if(angle < -a * .5 - a * 3 || a * .5 + a * 3) this.frameY = 6;    // вліво
-       console.log( a * .5 + a * 2)
+        if     (this.angle < -a * .5 - a * 2)                   this.frameY = 7;    // вліво-верх
+        else if(this.angle < -a * .5 - a)                       this.frameY = 0;    // верх
+        else if(this.angle < -a * .5)                           this.frameY = 1;    // вправо-верх  
+        else if(this.angle <  a * .5)                           this.frameY = 2;    // вправо
+        else if(this.angle <  a * .5 + a)                       this.frameY = 3;    // вправо-низ
+        else if(this.angle <  a * .5 + a * 2)                   this.frameY = 4;    // низ
+        else if(this.angle <  a * .5 + a * 3)                   this.frameY = 5;    // вліво-вниз
+        else if(this.angle < -a * .5 - a * 3 || a * .5 + a * 3) this.frameY = 6;    // вліво
+      
         // блок зміни швидкості персонажа
         if( distance > this.speedModifier){
             this.speedX    = dx / distance || 0;       // якщо значення  this.dx / distance = undefined тоді this.speedX  = 0
@@ -86,6 +98,7 @@ export default class Player {
         });
        
     }
+
     draw(ctx){
         // малюємо персонажа
         this.playerX = this.x - this.playerWidth * .5;

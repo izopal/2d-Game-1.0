@@ -10,10 +10,11 @@ export default class Egg {
         this.height         = constants.egg.height;
         // параметри кінцевого розміру кадру (frame) зображення 
         this.size           = constants.egg.size;
-        this.eggWidth       = this.width * this.size;
-        this.eggHeight      = this.height * this.size;
+        this.scale          = this.game.scale;
+        this.eggWidth       = this.width * this.size * this.scale;
+        this.eggHeight      = this.height * this.size * this.scale;
         // параметри початкового розміщення на полотні
-        this.radius         = constants.egg.radius;
+        this.radius         = constants.egg.radius * this.scale;
         this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
         // параметри для зміни кадрів забраження персонажа
@@ -22,7 +23,14 @@ export default class Egg {
         this.frameX         = Math.floor(Math.random() * this.maxFrameX);
         this.frameY         = Math.floor(Math.random() * this.maxFrameY);  
     };
-    redet(){
+    reset(){
+        this.scale          = this.game.scale;
+        this.eggWidth       = this.width * this.size * this.scale;
+        this.eggHeight      = this.height * this.size * this.scale;
+        this.radius         = constants.egg.radius * this.scale;
+        this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
+        this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
+
     };
     draw(ctx){
         // малюємо картинку з перонажем

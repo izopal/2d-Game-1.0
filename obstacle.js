@@ -10,10 +10,11 @@ export default class Obstacle {
         this.height         = constants.obstacle.height;
         // параметри кінцевого розміру кадру (frame) зображення для перешкод
         this.size           = constants.obstacle.size;
-        this.obstacleWidth  = this.width * this.size;
-        this.obstacleHeight = this.height * this.size;
+        this.scale          = this.game.scale;
+        this.obstacleWidth  = this.width * this.size *  this.scale;
+        this.obstacleHeight = this.height * this.size * this.scale;
         // параметри початкового розміщення перешкод на полотні
-        this.radius         = constants.obstacle.radius;
+        this.radius         = constants.obstacle.radius * this.scale;
         this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
         // параметри для зміни кадрів забраження персонажа
@@ -22,9 +23,15 @@ export default class Obstacle {
         this.frameX         = Math.floor(Math.random() * this.maxFrameX);
         this.frameY         = Math.floor(Math.random() * this.maxFrameY);  
         
+        this.colision       = false;
     }
     reset(){
-
+        this.scale          = this.game.scale;
+        this.obstacleWidth  = this.width * this.size * this.scale;
+        this.obstacleHeight = this.height * this.size * this.scale;
+        this.radius         = constants.obstacle.radius * this.scale;
+        this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
+        this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
     }
     draw(ctx){
         // малюємо перешкоду

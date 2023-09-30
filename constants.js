@@ -6,14 +6,19 @@ const constants = { game:      {
                                     fps:                  100,
                                     timeInterval:         1000,
                     }, 
+                    layer:      {
+                                    width:                1280,
+                                    height:               720,
+                        
+                    }, 
                     
                     player:     {   width:                5900 / 59,
                                     height:               800 / 8,
                                     size:                 2,
-                                    maxFrameX:            58, 
+                                    maxFrameX:            59, 
                                     maxFrameY:            8,
                                     radius:               40,
-                                    speedModifier:        30,
+                                    speedModifier:        20,
                     },
 
                     obstacle:   {
@@ -39,4 +44,5 @@ const constants = { game:      {
                     },
   };
   
+
   export default constants;
