@@ -4,8 +4,11 @@
     padding: 0;
     box-sizing: border-box;
 }
+html{
+    overscroll-behavior: none;
+}
 body{
-    overflow-y: hidden;
+    overscroll-behavior-y: contain;
 }
 #canvasMS{
     position: fixed;
