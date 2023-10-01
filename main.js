@@ -19,14 +19,8 @@ window.addEventListener('load',  function() {
     class Game {
         constructor(canvasMS, constants){
             this.canvas            = canvasMS;
-            this.bodySize          = document.querySelector('body').getBoundingClientRect();
             this.canvasSize        = this.canvas.getBoundingClientRect();
-            // this.heading           = {
-            //                             x: this.canvasSize.x -  this.bodySize.x,
-            //                             y: this.canvasSize.y -  this.bodySize.y,
-            //                         };
-            console.log(this.bodySize);
-            console.log(this.canvasSize);
+            
             this.dw                = this.canvasSize.width / window.screen.width;
             this.dh                = this.canvasSize.height / window.screen.height;
             this.scale             = Math.min(this.dw, this.dh);
