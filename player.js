@@ -9,8 +9,8 @@ export default class Player {
         // паарметри зображення персонажа
         this.image         = document.getElementById('bull');
         // параметри початквого розміру кадру (frame) зображення для персонжа
-        this.width         = constants.player.width ; 
-        this.height        = constants.player.height ;
+        this.width         = constants.player.width; 
+        this.height        = constants.player.height;
         // параметри кінцевого розміру кадру (frame) зображення для персонажа
         this.size          = constants.player.size;
         this.scale         = this.game.scale;

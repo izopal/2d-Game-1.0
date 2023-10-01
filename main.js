@@ -9,8 +9,8 @@ import Egg          from './egg.js';
 
 window.addEventListener('load',  function() { 
     const canvasMS         = document.getElementById('canvasMS');
-          canvasMS.width   = constants.game.canvasWidth;
-          canvasMS.height  = constants.game.canvasHeight;
+          canvasMS.width   = innerWidth;
+          canvasMS.height  = innerHeight;
     const ctx              = canvasMS.getContext('2d', { willReadFrequently: true });
           ctx.fillStyle    = 'none';
           ctx.lineStroke   = 3;
@@ -21,15 +21,17 @@ window.addEventListener('load',  function() {
             this.canvas            = canvasMS;
             this.canvasSize        = this.canvas.getBoundingClientRect();
             
-            this.dw                = this.canvasSize.width / window.screen.width;
-            this.dh                = this.canvasSize.height / window.screen.height;
-            this.scale             = Math.min(this.dw, this.dh);
+            this.mobilScreen       = window.screen.width < window.screen.height;
             this.fullScreen        = constants.game.canvasWidth === innerWidth && constants.game.canvasHeight === innerHeight;
+            
+            this.dw                = constants.game.canvasWidth / window.screen.width;
+            this.dh                = (!this.mobilScreen) ? constants.game.canvasHeight / window.screen.height : constants.game.canvasWidth / window.screen.height;
+            this.scale             = Math.min(this.dw, this.dh);
             // параметри полотна
-            this.width             = canvasMS.width;
-            this.height            = canvasMS.height;
-            this.topMargin         = (this.fullScreen) ? constants.game.topMargin : constants.game.topMargin *  this.dh;
-            console.log(this.topMargin)
+            this.width             = constants.game.canvasWidth;
+            this.height            = (!this.mobilScreen) ? constants.game.canvasHeight : constants.game.canvasWidth;
+            this.topMargin         = constants.game.topMargin *  this.dh;
+           
             // параметри швидкості відображення кадрів
             this.fps               = constants.game.fps;
             this.frameInterval     = constants.game.timeInterval/this.fps;
@@ -62,8 +64,8 @@ window.addEventListener('load',  function() {
             this.dh          = canvasMS.height / window.screen.height;
             this.scale       = Math.min(this.dw, this.dh);
             // обновлюємо значення парметрів
-            this.width       = canvasMS.width;
-            this.height      = canvasMS.height;
+            this.width       = (this.fullScreen) ? canvasMS.width : constants.game.canvasWidth * this.scale;
+            this.height      = (this.fullScreen) ? canvasMS.height : constants.game.canvasHeight * this.scale;
             this.topMargin   = constants.game.topMargin * this.dh;
             // обновлюємо значення модулів
             this.background.reset();
