@@ -18,7 +18,6 @@ window.addEventListener('load',  function() {
         constructor(canvasMS, constants){
             // параметри кмов різних пристроїв
             this.canvas            = canvasMS;
-            this.canvasSize        = this.canvas.getBoundingClientRect();
             canvasMS.width         = constants.game.canvasWidth;
             canvasMS.height        = constants.game.canvasHeight;
             // параметри масштабування
@@ -34,7 +33,6 @@ window.addEventListener('load',  function() {
             // параметри полотна
             this.width             = canvasMS.width;
             this.height            = canvasMS.height;
-            
             this.topMargin         = constants.game.topMargin *  this.scaleY;
             // параметри швидкості відображення кадрів
             this.fps               = constants.game.fps;
@@ -69,9 +67,6 @@ window.addEventListener('load',  function() {
             this.scaleY      = canvasMS.height / constants.layer.height;
             this.scale       = Math.min(this.scaleX, this.scaleY);
 
-            this.dw          = width / window.screen.width;
-            this.dh          = height / window.screen.height;
-            this.ds          = Math.min(this.dw, this.dh);
             // обновлюємо значення парметрів
             this.width       = canvasMS.width; 
             this.height      = canvasMS.height;

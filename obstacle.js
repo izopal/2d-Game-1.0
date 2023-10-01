@@ -9,7 +9,7 @@ export default class Obstacle {
         this.width          = constants.obstacle.width; 
         this.height         = constants.obstacle.height;
         // параметри кінцевого розміру кадру (frame) зображення для перешкодgame.
-        this.size           =  constants.obstacle.size;
+        this.size           = constants.obstacle.size;
         this.obstacleWidth  = this.width * this.size *  this.game.scaleX;
         this.obstacleHeight = this.height * this.size * this.game.scaleY;
         // параметри початкового розміщення перешкод на полотні
