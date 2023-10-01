@@ -1,11 +1,8 @@
-import constants    from './constants.js';
+import constants        from './constants.js';
 import { Background }   from './layer.js';
-import Obstacle     from './obstacle.js';
-import Player       from './player.js';
-import Egg          from './egg.js';
-    
-
-
+import Obstacle         from './obstacle.js';
+import Player           from './player.js';
+import Egg              from './egg.js';
 
 window.addEventListener('load',  function() { 
     const canvasMS         = document.getElementById('canvasMS');
@@ -25,13 +22,20 @@ window.addEventListener('load',  function() {
             canvasMS.width         = constants.game.canvasWidth;
             canvasMS.height        = constants.game.canvasHeight;
             // параметри масштабування
-            this.dw                = canvasMS.width / window.screen.width;
-            this.dh                = canvasMS.height / window.screen.height;
-            this.scale             = Math.min(this.dw, this.dh);
+            this.scaleX            = canvasMS.width / constants.layer.width;
+            this.scaleY            = canvasMS.height / constants.layer.height;
+            this.scale             = Math.min(this.scaleX, this.scaleY);
+
+            // this.dw                = window.innerWidth / window.screen.width;
+            // this.dh                = window.innerHeight / window.screen.height;
+            // this.ds                = Math.min(this.dw, this.dh);
+            // console.log(this.ds)
+
             // параметри полотна
-            this.width             = (fullScreen) ? canvasMS.width  : canvasMS.width * this.scale;
-            this.height            = (fullScreen) ? canvasMS.height : canvasMS.height * this.scale;
-            this.topMargin         = constants.game.topMargin *  this.dh;
+            this.width             = canvasMS.width;
+            this.height            = canvasMS.height;
+            
+            this.topMargin         = constants.game.topMargin *  this.scaleY;
             // параметри швидкості відображення кадрів
             this.fps               = constants.game.fps;
             this.frameInterval     = constants.game.timeInterval/this.fps;
@@ -39,7 +43,7 @@ window.addEventListener('load',  function() {
             // підключаємо задні фони
             this.background        = new Background(this);
             // підключаємо модуль персонажа
-            this.player            = new Player(this);
+            this.player            = new Player(this, fullScreen);
 
             // параметри першкод
             this.numberOffObstacles = constants.obstacle.number;
@@ -57,16 +61,21 @@ window.addEventListener('load',  function() {
         }
         resize(width, height){
             // обновлюємо значення полотна
-            canvasMS.width   = width;
-            canvasMS.height  = height;
+            canvasMS.width   =  width;
+            canvasMS.height  =  height;
+            console.log(canvasMS.width, canvasMS.height)
             // параметри масштабування
+            this.scaleX      = canvasMS.width / constants.layer.width;
+            this.scaleY      = canvasMS.height / constants.layer.height;
+            this.scale       = Math.min(this.scaleX, this.scaleY);
+
             this.dw          = width / window.screen.width;
             this.dh          = height / window.screen.height;
-            this.scale       = Math.min(this.dw, this.dh);
+            this.ds          = Math.min(this.dw, this.dh);
             // обновлюємо значення парметрів
-            this.width       = (fullScreen) ? canvasMS.width : canvasMS.width * this.scale;
-            this.height      = (fullScreen) ? canvasMS.height : canvasMS.height * this.scale;
-            this.topMargin   = constants.game.topMargin * this.dh;
+            this.width       = canvasMS.width; 
+            this.height      = canvasMS.height;
+            this.topMargin   = constants.game.topMargin * this.scaleY;
             // обновлюємо значення модулів
             this.background.reset();
             this.player.reset();
@@ -102,8 +111,6 @@ window.addEventListener('load',  function() {
                    this.obstacles.push(firstObstacle);
                 ++attempts;
             }
-            // 
-            
         }
 
         draw(ctx){

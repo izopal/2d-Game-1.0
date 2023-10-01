@@ -1,19 +1,19 @@
 import constants from "./constants.js";
 
 export default class Obstacle {
-    constructor(game){
+    constructor(game, fullScreen){
         this.game           = game;
         // паарметри зображення перешкод
         this.image          = document.getElementById('obstacle');
         // параметри початквого розміру кадру (frame) зображення для перешкод
         this.width          = constants.obstacle.width; 
         this.height         = constants.obstacle.height;
-        // параметри кінцевого розміру кадру (frame) зображення для перешкод
-        this.size           = constants.obstacle.size;
-        this.scale          = this.game.scale;
-        this.obstacleWidth  = this.width * this.size *  this.scale;
-        this.obstacleHeight = this.height * this.size * this.scale;
+        // параметри кінцевого розміру кадру (frame) зображення для перешкодgame.
+        this.size           =  constants.obstacle.size;
+        this.obstacleWidth  = this.width * this.size *  this.game.scaleX;
+        this.obstacleHeight = this.height * this.size * this.game.scaleY;
         // параметри початкового розміщення перешкод на полотні
+        this.scale          = this.game.scale;
         this.radius         = constants.obstacle.radius * this.scale;
         this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
@@ -27,8 +27,8 @@ export default class Obstacle {
     }
     reset(){
         this.scale          = this.game.scale;
-        this.obstacleWidth  = this.width * this.size * this.scale;
-        this.obstacleHeight = this.height * this.size * this.scale;
+        this.obstacleWidth  = this.width * this.size * this.game.scaleX;
+        this.obstacleHeight = this.height * this.size * this.game.scaleY;
         this.radius         = constants.obstacle.radius * this.scale;
         this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;

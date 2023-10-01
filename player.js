@@ -10,11 +10,11 @@ export default class Player {
         this.width         = constants.player.width; 
         this.height        = constants.player.height;
         // параметри кінцевого розміру кадру (frame) зображення для персонажа
-        this.scale         = this.game.scale;
         this.size          = constants.player.size;
-        this.playerWidth   = this.width * this.size * this.scale;
-        this.playerHeight  = this.height * this.size * this.scale;
+        this.playerWidth   = this.width * this.size * this.game.scaleX;
+        this.playerHeight  = this.height * this.size * this.game.scaleY;
         // параметри розміщення і розмірів тіні персонажа
+        this.scale         = this.game.scale;
         this.radius        = constants.player.radius * this.scale;
         this.x             = this.game.width * .5;
         this.y             = this.game.height * .5;
@@ -36,9 +36,9 @@ export default class Player {
        
     }
     reset(){
+        this.playerWidth   = this.width * this.size * this.game.scaleX;
+        this.playerHeight  = this.height * this.size * this.game.scaleY;
         this.scale         = this.game.scale;
-        this.playerWidth   = this.width * this.size * this.scale;
-        this.playerHeight  = this.height * this.size * this.scale;
         this.radius        = constants.player.radius * this.scale;
         this.x             = this.game.width * .5;
         this.y             = this.game.height * .5;

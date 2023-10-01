@@ -10,10 +10,10 @@ export default class Egg {
         this.height         = constants.egg.height;
         // параметри кінцевого розміру кадру (frame) зображення 
         this.size           = constants.egg.size;
-        this.scale          = this.game.scale;
-        this.eggWidth       = this.width * this.size * this.scale;
-        this.eggHeight      = this.height * this.size * this.scale;
+        this.eggWidth       = this.width * this.size * this.game.scaleX;
+        this.eggHeight      = this.height * this.size * this.game.scaleY;
         // параметри початкового розміщення на полотні
+        this.scale          = this.game.scale;
         this.radius         = constants.egg.radius * this.scale;
         this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
@@ -25,8 +25,8 @@ export default class Egg {
     };
     reset(){
         this.scale          = this.game.scale;
-        this.eggWidth       = this.width * this.size * this.scale;
-        this.eggHeight      = this.height * this.size * this.scale;
+        this.eggWidth       = this.width * this.size * this.game.scaleX;
+        this.eggHeight      = this.height * this.size * this.game.scaleY;
         this.radius         = constants.egg.radius * this.scale;
         this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;

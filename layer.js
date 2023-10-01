@@ -34,6 +34,7 @@ export class Background {
         // параметри початквого розміру зображення для заднього фону
         this.layerWidth         = this.game.width;
         this.layerHeight        = this.game.height;
+        console.log(this.layerWidth)
         // підключаємо class Layer з його параметрами  і функціями
         this.layer1             = new Layer (this.Image1, this.layerWidth, this.layerHeight);
         this.layer2             = new Layer (this.Image2, this.layerWidth, this.layerHeight);
