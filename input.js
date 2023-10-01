@@ -10,6 +10,9 @@ export default class InputHandler {
         window.addEventListener('resize', (e) => {
             this.game.resize(e.target.window.innerWidth, e.target.window.innerHeight);
         });
+        window.addEventListener('orientationchange', () => {
+            this.game.resize(window.innerWidth, window.innerHeight);
+        });
         // ==================== Блок керування мишкою =======================>
         // вкл./викл конструктора
         window.addEventListener('keydown', (e) => {

@@ -9,8 +9,9 @@ import Egg          from './egg.js';
 
 window.addEventListener('load',  function() { 
     const canvasMS         = document.getElementById('canvasMS');
-          canvasMS.width   = innerWidth;
-          canvasMS.height  = innerHeight;
+    const mobilScreen      = window.innerWidth < window.innerHeight;
+    const fullScreen       = constants.game.canvasWidth === window.innerWidth && constants.game.canvasHeight === window.innerHeight;
+
     const ctx              = canvasMS.getContext('2d', { willReadFrequently: true });
           ctx.fillStyle    = 'none';
           ctx.lineStroke   = 3;
@@ -18,20 +19,19 @@ window.addEventListener('load',  function() {
 
     class Game {
         constructor(canvasMS, constants){
+            // параметри кмов різних пристроїв
             this.canvas            = canvasMS;
             this.canvasSize        = this.canvas.getBoundingClientRect();
-            
-            this.mobilScreen       = window.screen.width < window.screen.height;
-            this.fullScreen        = constants.game.canvasWidth === innerWidth && constants.game.canvasHeight === innerHeight;
-            
-            this.dw                = constants.game.canvasWidth / window.screen.width;
-            this.dh                = (!this.mobilScreen) ? constants.game.canvasHeight / window.screen.height : constants.game.canvasWidth / window.screen.height;
+            canvasMS.width         = constants.game.canvasWidth;
+            canvasMS.height        = (!mobilScreen) ? constants.game.canvasHeight : constants.game.canvasWidth;
+            // параметри масштабування
+            this.dw                = canvasMS.width / window.screen.width;
+            this.dh                = canvasMS.height / window.screen.height;
             this.scale             = Math.min(this.dw, this.dh);
             // параметри полотна
-            this.width             = constants.game.canvasWidth;
-            this.height            = (!this.mobilScreen) ? constants.game.canvasHeight : constants.game.canvasWidth;
+            this.width             = (fullScreen) ? canvasMS.width  : canvasMS.width * this.scale;
+            this.height            = (fullScreen) ? canvasMS.height : canvasMS.height * this.scale;
             this.topMargin         = constants.game.topMargin *  this.dh;
-           
             // параметри швидкості відображення кадрів
             this.fps               = constants.game.fps;
             this.frameInterval     = constants.game.timeInterval/this.fps;
@@ -56,16 +56,15 @@ window.addEventListener('load',  function() {
         }
         resize(width, height){
             // обновлюємо значення полотна
-            // if(width < height) canvasMS.width = canvasMS.height  = width; 
             canvasMS.width   = width;
-            canvasMS.height  = height;
-            // 
-            this.dw          = canvasMS.width / window.screen.width;
-            this.dh          = canvasMS.height / window.screen.height;
+            canvasMS.height  = (!mobilScreen) ? height : width;
+            // параметри масштабування
+            this.dw          = width / window.screen.width;
+            this.dh          = height / window.screen.height;
             this.scale       = Math.min(this.dw, this.dh);
             // обновлюємо значення парметрів
-            this.width       = (this.fullScreen) ? canvasMS.width : constants.game.canvasWidth * this.scale;
-            this.height      = (this.fullScreen) ? canvasMS.height : constants.game.canvasHeight * this.scale;
+            this.width       = (fullScreen) ? canvasMS.width : canvasMS.width * this.scale;
+            this.height      = (fullScreen) ? canvasMS.height : canvasMS.height * this.scale;
             this.topMargin   = constants.game.topMargin * this.dh;
             // обновлюємо значення модулів
             this.background.reset();

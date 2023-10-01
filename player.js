@@ -4,16 +4,14 @@ import InputHandler from './input.js';
 export default class Player {
     constructor(game){
         this.game          = game;
-        // підключаємо модуль керування персонажем
-        this.input         = new InputHandler(this.game);
         // паарметри зображення персонажа
         this.image         = document.getElementById('bull');
         // параметри початквого розміру кадру (frame) зображення для персонжа
         this.width         = constants.player.width; 
         this.height        = constants.player.height;
         // параметри кінцевого розміру кадру (frame) зображення для персонажа
-        this.size          = constants.player.size;
         this.scale         = this.game.scale;
+        this.size          = constants.player.size;
         this.playerWidth   = this.width * this.size * this.scale;
         this.playerHeight  = this.height * this.size * this.scale;
         // параметри розміщення і розмірів тіні персонажа
@@ -25,6 +23,8 @@ export default class Player {
         this.frameY        = 0;  
         this.maxFrameX     = constants.player.maxFrameX;
         this.maxFrameY     = constants.player.maxFrameY;  
+        // підключаємо модуль керування персонажем
+        this.input         = new InputHandler(this.game);
         
         // параметри регулювання руху швидкості персонажа і мишки
         this.speedX        = 0;
@@ -43,9 +43,6 @@ export default class Player {
         this.x             = this.game.width * .5;
         this.y             = this.game.height * .5;
         this.speedModifier = constants.player.speedModifier * this.scale;
-        console.log(this.speedModifier )
-        // this.x            ;
-        // this.y             ;
     }
     update(){
 
