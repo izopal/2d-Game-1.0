@@ -23,7 +23,7 @@ window.addEventListener('load',  function() {
             this.canvas            = canvasMS;
             this.canvasSize        = this.canvas.getBoundingClientRect();
             canvasMS.width         = constants.game.canvasWidth;
-            canvasMS.height        = (!mobilScreen) ? constants.game.canvasHeight : constants.game.canvasWidth;
+            canvasMS.height        = constants.game.canvasHeight;
             // параметри масштабування
             this.dw                = canvasMS.width / window.screen.width;
             this.dh                = canvasMS.height / window.screen.height;
@@ -52,12 +52,13 @@ window.addEventListener('load',  function() {
             this.eggs               = [];
             // параметри конструктора
             this.debug              = false;
+            
 
         }
         resize(width, height){
             // обновлюємо значення полотна
             canvasMS.width   = width;
-            canvasMS.height  = (!mobilScreen) ? height : width;
+            canvasMS.height  = height;
             // параметри масштабування
             this.dw          = width / window.screen.width;
             this.dh          = height / window.screen.height;

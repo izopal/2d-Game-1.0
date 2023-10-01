@@ -7,8 +7,8 @@ export default class InputHandler {
 
         
         // ==================== Блок зміни розмірів екрану =======================>
-        window.addEventListener('resize', (e) => {
-            this.game.resize(e.target.window.innerWidth, e.target.window.innerHeight);
+        window.addEventListener('resize', () => {
+            this.game.resize(window.innerWidth, window.innerHeight);
         });
         window.addEventListener('orientationchange', () => {
             this.game.resize(window.innerWidth, window.innerHeight);
