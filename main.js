@@ -19,15 +19,23 @@ window.addEventListener('load',  function() {
     class Game {
         constructor(canvasMS, constants){
             this.canvas            = canvasMS;
+            this.bodySize          = document.querySelector('body').getBoundingClientRect();
             this.canvasSize        = this.canvas.getBoundingClientRect();
-            console.log(this.canvasSize)
+            // this.heading           = {
+            //                             x: this.canvasSize.x -  this.bodySize.x,
+            //                             y: this.canvasSize.y -  this.bodySize.y,
+            //                         };
+            console.log(this.bodySize);
+            console.log(this.canvasSize);
             this.dw                = this.canvasSize.width / window.screen.width;
             this.dh                = this.canvasSize.height / window.screen.height;
             this.scale             = Math.min(this.dw, this.dh);
+            this.fullScreen        = constants.game.canvasWidth === innerWidth && constants.game.canvasHeight === innerHeight;
             // параметри полотна
             this.width             = canvasMS.width;
             this.height            = canvasMS.height;
-            this.topMargin         = constants.game.topMargin *  this.dh;
+            this.topMargin         = (this.fullScreen) ? constants.game.topMargin : constants.game.topMargin *  this.dh;
+            console.log(this.topMargin)
             // параметри швидкості відображення кадрів
             this.fps               = constants.game.fps;
             this.frameInterval     = constants.game.timeInterval/this.fps;

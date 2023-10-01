@@ -2,6 +2,8 @@
 const constants = { game:      {
                                     canvasWidth:          window.innerWidth,
                                     canvasHeight:         window.innerHeight,
+                                    // canvasWidth:          200,
+                                    // canvasHeight:         200,
                                     topMargin:            260,
                                     fps:                  100,
                                     timeInterval:         1000,

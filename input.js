@@ -41,7 +41,6 @@ export default class InputHandler {
             this.mouse.pressed = true;
             this.mouse.x = e.changedTouches[0].pageX;
             this.mouse.y = e.changedTouches[0].pageY;
-            console.log(e)
         });
         
         // рух 
