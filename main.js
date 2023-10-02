@@ -3,6 +3,7 @@ import { Background }   from './layer.js';
 import Obstacle         from './obstacle.js';
 import Player           from './player.js';
 import Egg              from './egg.js';
+import Enemy            from './enemy.js';
 
 window.addEventListener('load',  function() { 
     const canvasMS         = document.getElementById('canvasMS');
@@ -41,22 +42,27 @@ window.addEventListener('load',  function() {
             // підключаємо задні фони
             this.background        = new Background(this);
             // підключаємо модуль персонажа
-            this.player            = new Player(this, fullScreen);
-
+            this.player            = new Player(this, 'player');
             // параметри першкод
             this.numberOffObstacles = constants.obstacle.number;
             this.distanceBuffer     = constants.obstacle.distanceBuffer;     //параметр буферної зони(мінімальна відстань між перешкодами) між перешкодами
             this.obstacles          = [];
-            // 
+            // параметри яїчок
             this.eggInterval        = constants.egg.timeInterval/this.fps;
             this.eggTimer           = 0;
             this.numberOffEggs      = constants.egg.number;
             this.eggs               = [];
+            // параметри ворогів
+            this.enemyInterval      = constants.enemy.timeInterval/this.fps;
+            this.enemyTimer         = 0;
+            this.numberOffEnemies   = constants.enemy.number;
+            this.enemies            = []; 
+            // параметри всіх обєктів
+            this.allGameObjects     = [];
             // параметри конструктора
             this.debug              = false;
-            
-
         }
+        
         resize(width, height){
             // обновлюємо значення полотна
             canvasMS.width   =  width;
@@ -76,6 +82,7 @@ window.addEventListener('load',  function() {
             this.player.reset();
             this.obstacles.forEach(obstacl => obstacl.reset());
             this.eggs.forEach(egg => egg.reset());
+            this.enemies.forEach(enemy => enemy.reset());
         };
         
         checkCollision(a, b){
@@ -87,13 +94,16 @@ window.addEventListener('load',  function() {
         };
 
         addEgg(){
-            this.eggs.push(new Egg(this))
+            this.eggs.push(new Egg(this, 'egg'))
         };
+        addEnemy(){
+            this.enemies.push(new Enemy(this, 'enemy'))
+        }
         init(){
             // умова щоб при генерації перешкод вони не перекривалися одна з одною
             let attempts = 0;
             while (this.obstacles.length < this.numberOffObstacles && attempts < 500){
-                let firstObstacle   = new Obstacle(this);
+                let firstObstacle   = new Obstacle(this, 'obstacle');
                 let overlap         = false;
                 this.obstacles.forEach(obstacle => {
                     this.dx             = firstObstacle.x - obstacle.x
@@ -110,17 +120,19 @@ window.addEventListener('load',  function() {
 
         draw(ctx){
             this.background.backgroundLayers[0].draw(ctx);
-            const allGameObjects = [this.player, ...this.obstacles, ...this.eggs];  // створюємо обєкт з усіма елементами які потрібно сортувати
-            allGameObjects.sort((a, b) => a.y - b.y);                               // Сортуємо за координатою y (від меншого до більшого)
-            allGameObjects.forEach(object => object.draw(ctx));
+            this.allGameObjects = [this.player, ...this.obstacles, ...this.eggs, ...this.enemies];  // створюємо обєкт з усіма елементами які потрібно сортувати
+            this.allGameObjects.sort((a, b) => a.y - b.y);                               // Сортуємо за координатою y (від меншого до більшого)
+            this.allGameObjects.forEach(object => object.draw(ctx));
             this.background.backgroundLayers[1].draw(ctx);
         }
-
+        update(){
+            this.allGameObjects.forEach(object => object.update());
+        }
         render(ctx, deltaTime){
             if (this.frameTimer > this.frameInterval) {
                 ctx.clearRect(0, 0, canvasMS.width, canvasMS.height);
                 this.draw(ctx);
-                this.player.update();
+                this.update();
                 this.frameTimer = 0;
             };
 
@@ -131,6 +143,12 @@ window.addEventListener('load',  function() {
                 this.eggTimer = 0;
             }else{
                 this.eggTimer += deltaTime;
+            };
+            if(this.enemyTimer > this.enemyInterval && this.enemies.length < this.numberOffEnemies){
+                this.addEnemy();;
+                this.enemyTimer = 0;
+            }else{
+                this.enemyTimer += deltaTime;
             };
             
         }

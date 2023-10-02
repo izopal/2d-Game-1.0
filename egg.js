@@ -1,73 +1,31 @@
-import constants    from './constants.js';
+import GameObject from './GameObject.js';
 
-export default class Egg {
-    constructor(game){
-        this.game           = game;
-        // паарметри зображення перешкод
-        this.image          = document.getElementById('egg');
-        // параметри початкового розміру кадру (frame) зображення 
-        this.width          = constants.egg.width; 
-        this.height         = constants.egg.height;
-        // параметри кінцевого розміру кадру (frame) зображення 
-        this.size           = constants.egg.size;
-        this.eggWidth       = this.width * this.size * this.game.scaleX;
-        this.eggHeight      = this.height * this.size * this.game.scaleY;
-        // параметри початкового розміщення на полотні
-        this.scale          = this.game.scale;
-        this.radius         = constants.egg.radius * this.scale;
-        this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
-        this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
-        // параметри для зміни кадрів забраження персонажа
-        this.maxFrameX      = constants.egg.maxFrameX;
-        this.maxFrameY      = constants.egg.maxFrameY;  
-        this.frameX         = Math.floor(Math.random() * this.maxFrameX);
-        this.frameY         = Math.floor(Math.random() * this.maxFrameY);  
-    };
+export default class Egg extends GameObject {
+    constructor(game, key) {
+        super(game, key);
+    }
     reset(){
-        this.scale          = this.game.scale;
-        this.eggWidth       = this.width * this.size * this.game.scaleX;
-        this.eggHeight      = this.height * this.size * this.game.scaleY;
-        this.radius         = constants.egg.radius * this.scale;
-        this.x              = Math.random() * (this.game.width - this.radius * 2) + this.radius;
-        this.y              = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
-
-    };
+        super.reset()
+    }
     draw(ctx){
-        // малюємо картинку з перонажем
-        ctx.drawImage ( this.image, 
-                        // параметри кадру, який обераємо
-                        this.frameX * this.width, 
-                        this.frameY * this.height , 
-                        this.width, 
-                        this.height , 
-                        // параметри кадру, де буде розміщений і які розміри буде мати
-                        this.x - this.eggWidth * .5,                                                                // відображаємо зображення в оригінальному вигляді                             
-                        this.y - this.eggHeight * .8, 
-                        this.eggWidth, 
-                        this.eggHeight );
-
-        if(this.game.debug){
-            // малюємо коло
-            ctx.beginPath   ();
-            ctx.arc         (this.x,
-                            this.y,
-                            this.radius,
-                            0,
-                            Math.PI * 2);
-            ctx.save        ();
-                ctx.strokeStyle = 'red';
-                ctx.globalAlpha = .4;  
-                ctx.fillStyle   = 'white';           
-                ctx.fill    ();
-            ctx.restore     (); 
-            ctx.stroke      ();
-            // малюємо квадрат
-            ctx.strokeStyle = 'blue';
-            ctx.strokeRect (this.x - this.eggWidth * .5,  
-                            this.y - this.eggHeight * .8, 
-                            this.eggWidth, 
-                            this.eggHeight); 
-            ctx.stroke      ();
-        };
-    };
+        super.draw(ctx)
+    }
+    update(){
+        // блок зіткнення з персонажем і першкодами
+        let collisionObject = [this.game.player, ...this.game.obstacles];
+        collisionObject.forEach(object => {
+            let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, object);
+            if(collision){
+            const unit_x = dx / distance || 0;
+            const unit_y = dy / distance || 0;
+            this.x       = object.x + (sumOffRadius +1) * unit_x;
+            this.y       = object.y + (sumOffRadius +1) * unit_y;
+            }
+        });
+        // блок зіткнення з границями екрану
+        if     (this.x < 0 + this.width * .5)                this.x = this.width * .5;
+        else if(this.x > this.game.width - this.width * .5)  this.x = this.game.width - this.width * .5
+        if     (this.y < this.game.topMargin)                this.y = this.game.topMargin;
+        else if(this.y > this.game.height - this.height *.2) this.y = this.game.height - this.height *.2;
+    }
 }
