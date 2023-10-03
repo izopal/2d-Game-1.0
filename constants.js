@@ -74,15 +74,18 @@ const constants = { game:   { name:                 'game',
                                size:                 .75,
                                maxFrameX:            1, 
                                maxFrameY:            1,
-                               radius:               20,
+                               radius:               30,
 
-                               number:               10,
+                               number:               5,
                                distanceBuffer:       20,
-                               timeInterval:         500,
+                               timeInterval:         5000,
                                speedXmax:            3.5, 
                                speedXmin:            .5, 
                                speedYmin:            0, 
-                               speedYmax:            0 }
+                               speedYmax:            0,
+                               // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
+                               borderX:              .5,
+                               borderY:              .2}
 };
 console.log(constants)  
 export default constants;

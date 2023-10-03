@@ -1,5 +1,3 @@
-import constants    from './constants.js';
-
 class Layer {
     constructor(image, width, height){
         // підключення зображення заднього фону 
@@ -28,14 +26,13 @@ export class Background {
     constructor(game){
         this.game               = game;
         this.constants          = this.game.constants;
-        // підключаємо задній фон вигляд - ЛІС (`${this.key}`) `${this.constants[2].name}`
-        console.log(constants.layer.background.name)
+        // підключаємо задній фон вигляд - ЛІС 
         this.Image1             = document.getElementById('background');
         this.Image2             = document.getElementById('overlay')
         // параметри початквого розміру зображення для заднього фону
         this.layerWidth         = this.game.width;
         this.layerHeight        = this.game.height;
-       
+         
         // підключаємо class Layer з його параметрами  і функціями
         this.layer1             = new Layer (this.Image1, this.layerWidth, this.layerHeight);
         this.layer2             = new Layer (this.Image2, this.layerWidth, this.layerHeight);

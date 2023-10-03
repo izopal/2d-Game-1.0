@@ -33,12 +33,9 @@ window.addEventListener('load',  function() {
         constructor(canvasMS, constants){
             // перетворюємо обєкт constants в масив
             this.constants         = [];
-            for (const key in constants) {
-                if (constants.hasOwnProperty(key)) {
-                    this.constants.push(constants[key]);
-                }
-            };
+            for (const key in constants) this.constants.push(constants[key]);
             console.log(this.constants)
+            
             // параметри кмов різних пристроїв
             this.canvas            = canvasMS;
             canvasMS.width         = constants.game.canvasWidth;
@@ -156,16 +153,16 @@ window.addEventListener('load',  function() {
                 this.frameTimer = 0;
             };
             this.frameTimer += deltaTime;
-
+            // інтервал появи яїчок
             if(this.eggTimer > this.eggInterval && this.eggs.length < this.numberOffEggs){
                 this.addEgg();
                 this.eggTimer = 0;
             }else{
                 this.eggTimer += deltaTime;
             };
-
+            // інтервал появи ворогів
             if(this.enemyTimer > this.enemyInterval && this.enemies.length < this.numberOffEnemies){
-                this.addEnemy();;
+                this.addEnemy();
                 this.enemyTimer = 0;
             }else{
                 this.enemyTimer += deltaTime;
