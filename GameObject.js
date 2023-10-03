@@ -7,36 +7,39 @@ export default class GameObject {
         // підключаємо зображення
         this.image     = document.getElementById(`${this.key}`);
         // параметри початкового розміру кадру (frame) зображення 
-        this[`${this.key}Width`]  = constants[this.key].width;
-        this[`${this.key}Height`] = constants[this.key].height;
+        this[`${this.key}Width`]  = constants[`${this.key}`].width;
+        this[`${this.key}Height`] = constants[`${this.key}`].height;
         // параметри кінцевого розміру кадру (frame) зображення 
-        this.size      = constants[this.key].size;
+        this.size      = constants[`${this.key}`].size;
         this.scaleX    = this.game.scaleX;
         this.scaleY    = this.game.scaleY;
         this.width     = this[`${this.key}Width`] * this.size * this.game.scaleX;
         this.height    = this[`${this.key}Height`] * this.size * this.game.scaleY;
         // параметри початкового розміщення на полотні
         this.scale     = this.game.scale;
-        this.radius    = constants[this.key].radius * this.scale;
+        this.radius    = constants[`${this.key}`].radius * this.scale;
         this.x         = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y         = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
         // параметри кадрів забраження
-        this.maxFrameX = constants[this.key].maxFrameX;
-        this.maxFrameY = constants[this.key].maxFrameY;
+        this.maxFrameX = constants[`${this.key}`].maxFrameX;
+        this.maxFrameY = constants[`${this.key}`].maxFrameY;
         this.frameX    = Math.floor(Math.random() * this.maxFrameX);
         this.frameY    = Math.floor(Math.random() * this.maxFrameY);
         // Параметри швидкості
-        this.speedX    = Math.random() * (constants[this.key].speedXmax - constants[this.key].speedXmin) + constants.enemy.speedXmin; 
-        this.speedY    = Math.random() * (constants[this.key].speedYmax - constants[this.key].speedYmin) + constants.enemy.speedYmin; 
-    }
+        this.speedX    = Math.random() * (constants[`${this.key}`].speedXmax - constants[`${this.key}`].speedXmin) + constants[`${this.key}`].speedXmin; 
+        this.speedY    = Math.random() * (constants[`${this.key}`].speedYmax - constants[`${this.key}`].speedYmin) + constants[`${this.key}`].speedYmin; 
+        // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
+        this.borderX   = constants[`${this.key}`].borderX;
+        this.borderY   = constants[`${this.key}`].borderY;
+    };
 
     reset() {
         this.width     = this[`${this.key}Width`] * this.size * this.game.scaleX;
         this.height    = this[`${this.key}Height`] * this.size * this.game.scaleY;
-        this.radius    = constants[this.key].radius * this.game.scale;
+        this.radius    = constants[`${this.key}`].radius * this.game.scale;
         this.x         = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y         = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
-    }
+    };
 
     draw(ctx) {
         // малюємо персонажів
@@ -71,5 +74,13 @@ export default class GameObject {
                            this.height); 
             ctx.stroke();
         }
-    }
+    };
+
+    update(){
+        // блок зіткнення з границями екрану
+        if     (this.x < 0 + this.width * this.borderX)                  this.x = this.width * this.borderX;
+        else if(this.x > this.game.width - this.width * this.borderX)    this.x = this.game.width - this.width * this.borderX;
+        if     (this.y < this.game.topMargin)                            this.y = this.game.topMargin;
+        else if(this.y > this.game.height - this.height * this.borderY ) this.y = this.game.height -  this.height * this.borderY  ; 
+     }
 }

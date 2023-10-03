@@ -7,6 +7,7 @@ import Enemy            from './enemy.js';
 
 window.addEventListener('load',  function() { 
     const canvasMS         = document.getElementById('canvasMS');
+    const body             = document.body;
     const mobilScreen      = window.innerWidth < window.innerHeight;
     const fullScreen       = constants.game.canvasWidth === window.innerWidth && constants.game.canvasHeight === window.innerHeight;
 
@@ -14,9 +15,30 @@ window.addEventListener('load',  function() {
           ctx.fillStyle    = 'none';
           ctx.lineStroke   = 3;
           ctx.strokeStyle  = 'red';
+    
+
+    // Проходимося по ключам обєкта constants та створюємо <img> елементи тільки для тих які мають ключ image: true
+    for (const key in constants) {
+        if (constants[key].image === true) {
+            const img = document.createElement('img');
+            img.id    = key;
+            img.src   = `./images/${key}.png`;
+            img.alt   = '';
+
+            body.appendChild(img);                 // Додаємо створений <img> елемент до <body>
+        }
+    }
 
     class Game {
         constructor(canvasMS, constants){
+            // перетворюємо обєкт constants в масив
+            this.constants         = [];
+            for (const key in constants) {
+                if (constants.hasOwnProperty(key)) {
+                    this.constants.push(constants[key]);
+                }
+            };
+            console.log(this.constants)
             // параметри кмов різних пристроїв
             this.canvas            = canvasMS;
             canvasMS.width         = constants.game.canvasWidth;
@@ -42,37 +64,35 @@ window.addEventListener('load',  function() {
             // підключаємо задні фони
             this.background        = new Background(this);
             // підключаємо модуль персонажа
-            this.player            = new Player(this, 'player');
+            this.player            = new Player(this, `${this.constants[2].name}`);
             // параметри першкод
             this.numberOffObstacles = constants.obstacle.number;
             this.distanceBuffer     = constants.obstacle.distanceBuffer;     //параметр буферної зони(мінімальна відстань між перешкодами) між перешкодами
             this.obstacles          = [];
             // параметри яїчок
-            this.eggInterval        = constants.egg.timeInterval/this.fps;
+            this.eggInterval        = this.constants[4].timeInterval/this.fps;
             this.eggTimer           = 0;
-            this.numberOffEggs      = constants.egg.number;
+            this.numberOffEggs      = this.constants[4].number;
             this.eggs               = [];
             // параметри ворогів
-            this.enemyInterval      = constants.enemy.timeInterval/this.fps;
+            this.enemyInterval      = this.constants[5].timeInterval/this.fps;
             this.enemyTimer         = 0;
-            this.numberOffEnemies   = constants.enemy.number;
+            this.numberOffEnemies   = this.constants[5].number;
             this.enemies            = []; 
             // параметри всіх обєктів
             this.allGameObjects     = [];
             // параметри конструктора
             this.debug              = false;
         }
-        
+
         resize(width, height){
             // обновлюємо значення полотна
             canvasMS.width   =  width;
             canvasMS.height  =  height;
-            console.log(canvasMS.width, canvasMS.height)
             // параметри масштабування
             this.scaleX      = canvasMS.width / constants.layer.width;
             this.scaleY      = canvasMS.height / constants.layer.height;
             this.scale       = Math.min(this.scaleX, this.scaleY);
-
             // обновлюємо значення парметрів
             this.width       = canvasMS.width; 
             this.height      = canvasMS.height;
@@ -94,16 +114,16 @@ window.addEventListener('load',  function() {
         };
 
         addEgg(){
-            this.eggs.push(new Egg(this, 'egg'))
+            this.eggs.push(new Egg(this, `${this.constants[4].name}`))
         };
         addEnemy(){
-            this.enemies.push(new Enemy(this, 'enemy'))
+            this.enemies.push(new Enemy(this, `${this.constants[5].name}`))
         }
         init(){
             // умова щоб при генерації перешкод вони не перекривалися одна з одною
             let attempts = 0;
             while (this.obstacles.length < this.numberOffObstacles && attempts < 500){
-                let firstObstacle   = new Obstacle(this, 'obstacle');
+                let firstObstacle   = new Obstacle(this, `${this.constants[3].name}`);
                 let overlap         = false;
                 this.obstacles.forEach(obstacle => {
                     this.dx             = firstObstacle.x - obstacle.x
@@ -135,7 +155,6 @@ window.addEventListener('load',  function() {
                 this.update();
                 this.frameTimer = 0;
             };
-
             this.frameTimer += deltaTime;
 
             if(this.eggTimer > this.eggInterval && this.eggs.length < this.numberOffEggs){
@@ -144,13 +163,13 @@ window.addEventListener('load',  function() {
             }else{
                 this.eggTimer += deltaTime;
             };
+
             if(this.enemyTimer > this.enemyInterval && this.enemies.length < this.numberOffEnemies){
                 this.addEnemy();;
                 this.enemyTimer = 0;
             }else{
                 this.enemyTimer += deltaTime;
             };
-            
         }
     }
 

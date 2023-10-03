@@ -11,6 +11,9 @@ export default class Egg extends GameObject {
         super.draw(ctx)
     }
     update(){
+        // блок зіткнення з границями екрану
+        super.update();
+
         // блок зіткнення з персонажем і першкодами
         let collisionObject = [this.game.player, ...this.game.obstacles];
         collisionObject.forEach(object => {
@@ -22,10 +25,5 @@ export default class Egg extends GameObject {
             this.y       = object.y + (sumOffRadius +1) * unit_y;
             }
         });
-        // блок зіткнення з границями екрану
-        if     (this.x < 0 + this.width * .5)                this.x = this.width * .5;
-        else if(this.x > this.game.width - this.width * .5)  this.x = this.game.width - this.width * .5
-        if     (this.y < this.game.topMargin)                this.y = this.game.topMargin;
-        else if(this.y > this.game.height - this.height *.2) this.y = this.game.height - this.height *.2;
     }
 }

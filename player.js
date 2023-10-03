@@ -15,20 +15,21 @@ export default class Player extends GameObject {
         // підключаємо модуль керування персонажем
         
         // параметри регулювання руху швидкості персонажа і мишки
-        this.speedX        = constants.player.speedX;
-        this.speedY        = constants.player.speedY;
-        this.speedModifier = constants.player.speedModifier * this.scale;
-        this.dx            = constants.player.dx;
-        this.dy            = constants.player.dy;
-    }
+        this.speedX        = constants[`${this.key}`].speedX;
+        this.speedY        = constants[`${this.key}`].speedY;
+        this.speedModifier = constants[`${this.key}`].speedModifier * this.scale;
+        this.dx            = constants[`${this.key}`].dx;
+        this.dy            = constants[`${this.key}`].dy;
+    };
+
     reset(){
         super.reset();
         this.x             = this.game.width * .5;
         this.y             = this.game.height * .5;
-        this.speedModifier = constants.player.speedModifier * this.scale;
-    }
-    update(){
+        this.speedModifier = constants[`${this.key}`].speedModifier * this.scale;
+    };
 
+    update(){
         this.frameX = (this.frameX < this.maxFrameX - 1) ? ++this.frameX : 0;
       
         // блок зміни кадрів персонажа в залежності від кута розвороту
@@ -57,14 +58,9 @@ export default class Player extends GameObject {
         }
         this.x            += this.speedX * this.speedModifier;
         this.y            += this.speedY * this.speedModifier;
-
+        
         // блок зіткнення з границями екрану
-        if     (this.x - this.width * .25 < 0 ) this.x  = this.width * .25;
-        else if(this.x - this.width * .25 > this.game.width - this.width * .5) this.x = this.game.width - this.width * .25
-        if     (this.y < this.game.topMargin) this.y = this.game.topMargin;
-        else if(this.y > this.game.height - this.height *.2 ) this.y = this.game.height -  this.height *.2  ;
-
-      
+        super.update()
 
         // блок зіткнення персонажа з першкодами
         this.game.obstacles.forEach(obstacl => {
@@ -76,12 +72,12 @@ export default class Player extends GameObject {
                 this.y       = obstacl.y + (sumOffRadius +1) * unit_y;
             }
         });
-       
-    }
+    };
 
     draw(ctx){
         // малюємо персонажа
         super.draw(ctx);
+
         if(this.game.debug){
             // малюємо лінію
             ctx.beginPath   ();

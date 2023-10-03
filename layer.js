@@ -24,17 +24,18 @@ class Layer {
     }
 }
 
-
 export class Background { 
     constructor(game){
         this.game               = game;
-        // підключаємо задній фон вигляд - ЛІС
+        this.constants          = this.game.constants;
+        // підключаємо задній фон вигляд - ЛІС (`${this.key}`) `${this.constants[2].name}`
+        console.log(constants.layer.background.name)
         this.Image1             = document.getElementById('background');
         this.Image2             = document.getElementById('overlay')
         // параметри початквого розміру зображення для заднього фону
         this.layerWidth         = this.game.width;
         this.layerHeight        = this.game.height;
-        console.log(this.layerWidth)
+       
         // підключаємо class Layer з його параметрами  і функціями
         this.layer1             = new Layer (this.Image1, this.layerWidth, this.layerHeight);
         this.layer2             = new Layer (this.Image2, this.layerWidth, this.layerHeight);
@@ -45,11 +46,6 @@ export class Background {
     reset(){
         // знаходимо в нашому масиві шар і запускаємо функцію reset() даного шару
         this.backgroundLayers.forEach(layer => layer.reset(this.game.width, this.game.height)); 
-    }
-
-    draw(ctx){
-        // знаходимо в нашому масиві шар і запускаємо функцію draw(ctx) даного шару
-        this.backgroundLayers.forEach(layer => layer.draw(ctx)); 
     }
 }
 
