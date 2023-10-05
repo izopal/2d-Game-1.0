@@ -13,20 +13,13 @@ export default class Player extends GameObject {
         this.frameX        = 0;
         this.frameY        = 0;  
         // підключаємо модуль керування персонажем
-        
-        // параметри регулювання руху швидкості персонажа і мишки
-        this.speedX        = constants[`${this.key}`].speedX;
-        this.speedY        = constants[`${this.key}`].speedY;
-        this.speedModifier = constants[`${this.key}`].speedModifier * this.scale;
-        this.dx            = constants[`${this.key}`].dx;
-        this.dy            = constants[`${this.key}`].dy;
     };
 
     reset(){
         super.reset();
         this.x             = this.game.width * .5;
         this.y             = this.game.height * .5;
-        this.speedModifier = constants[`${this.key}`].speedModifier * this.scale;
+        this.speedModifier = constants[this.key[0]][this.key[1]].speedModifier * this.scale;
     };
 
     update(){

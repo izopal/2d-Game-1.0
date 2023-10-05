@@ -15,7 +15,7 @@ export default class Egg extends GameObject {
         super.update();
 
         // блок зіткнення з персонажем і першкодами і ворогами 
-        let collisionObject = [this.game.player, ...this.game.obstacles, ...this.game.enemies];
+        let collisionObject = [...this.game.players, ...this.game.obstacles, ...this.game.enemies];
         collisionObject.forEach(object => {
             let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, object);
             if(collision){

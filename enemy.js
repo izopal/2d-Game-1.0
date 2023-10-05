@@ -14,10 +14,12 @@ export default class Enemy extends GameObject {
         
     }
     update(){
-        
+        this.isFacingLeft = true; 
         this.x -= this.speedX;
+
         // блок повернення ворогів на початкову позицію
         if(this.x + this.width  < 0){
+            this.isFacingLeft = true;
             this.x  = this.game.width + this.width + Math.random() * this.game.width * .5;
             this.y  = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
         };
@@ -27,7 +29,7 @@ export default class Enemy extends GameObject {
         else if(this.y > this.game.height - this.height * this.borderY ) this.y = this.game.height -  this.height * this.borderY  ; 
 
         // блок зіткнення з ворогів і першкодами
-        let collisionObject = [this.game.player, ...this.game.obstacles];
+        let collisionObject = [...this.game.players, ...this.game.obstacles];
         collisionObject.forEach(object => {
             let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, object);
 
@@ -36,10 +38,8 @@ export default class Enemy extends GameObject {
                 const unit_y = dy / distance || 0;
                 this.x       = object.x + (sumOffRadius +1) * unit_x;
                 this.y       = object.y + (sumOffRadius +1) * unit_y;
-                this.isFacingLeft = object === this.game.player && [1, 2, 3].includes(this.game.player.frameY) ? false : true; 
+                this.isFacingLeft = object === this.game.players[0] && [1, 2, 3].includes(this.game.players[0].frameY) ? false : true; 
             };
-            
-            // this.isFacingLeft = true; 
         });
          
         // Обробка зіткнень з іншими ворогами
