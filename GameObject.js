@@ -1,59 +1,64 @@
-import constants from "./constants.js";
+import { findGameObject }           from "./constants.js";
 
 export default class GameObject {
     constructor(game, key) {
-        this.game         = game;
+        this.game                        = game;
         // початкові параметри 
-        this.key                        = `${key}`.split('.');
-        this.level                      = constants[this.key[0]][this.key[1]].level;
-        this.number                     = constants[this.key[0]][this.key[1]].number;
+        this.gameObject                  = findGameObject(this.game.data, key);
+        this.objectName                  = this.gameObject.name;
+        this.level                       = this.gameObject.level;
+        this.number                      = this.gameObject.number;
         // підключаємо зображення
-        // this.image                      = new Image;
-        // this.image.src                  = `./image/${this.key[1]}.png`;
-        // console.log(this.image.src)
-
-
-        
-        this.image        = document.getElementById(`${this.key[1]}`);
+        this.image                       = new Image;
+        this.image.src                   = `images/${this.objectName}.png`;
         // параметри початкового розміру кадру (frame) зображення 
-        this[`${this.key[1]}Width`]  = constants[this.key[0]][this.key[1]].width;
-        this[`${this.key[1]}Height`] = constants[this.key[0]][this.key[1]].height;
+        this[`${this.objectName}Width`]  = this.gameObject.width;
+        this[`${this.objectName}Height`] = this.gameObject.height;
         // параметри кінцевого розміру кадру (frame) зображення 
-        this.size         = constants[this.key[0]][this.key[1]].size;
+        this.size         = this.gameObject.size;
         this.scaleX       = this.game.scaleX;
         this.scaleY       = this.game.scaleY;
-        this.width        = this[`${this.key[1]}Width`] * this.size * this.game.scaleX;
-        this.height       = this[`${this.key[1]}Height`] * this.size * this.game.scaleY;
+        this.width        = this[`${this.objectName}Width`] * this.size * this.game.scaleX;
+        this.height       = this[`${this.objectName}Height`] * this.size * this.game.scaleY;
         // параметри початкового розміщення на полотні
         this.scale        = this.game.scale;
-        this.radius       = constants[this.key[0]][this.key[1]].radius * this.scale;
+        this.radius       = this.gameObject.radius * this.scale;
         this.x            = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y            = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
         // параметри регулювання руху швидкості персонажа і мишки
-        this.speedX        = constants[this.key[0]][this.key[1]].speedX;
-        this.speedY        = constants[this.key[0]][this.key[1]].speedY;
-        this.speedModifier = constants[this.key[0]][this.key[1]].speedModifier * this.scale;
-        this.dx            = constants[this.key[0]][this.key[1]].dx;
-        this.dy            = constants[this.key[0]][this.key[1]].dy;
+        this.speedX        = this.gameObject.speedX;
+        this.speedY        = this.gameObject.speedY;
+        this.speedModifier = this.gameObject.speedModifier * this.scale;
+        this.dx            = this.gameObject.dx;
+        this.dy            = this.gameObject.dy;
         // параметри кадрів забраження
-        this.maxFrameX    = constants[this.key[0]][this.key[1]].maxFrameX;
-        this.maxFrameY    = constants[this.key[0]][this.key[1]].maxFrameY;
+        this.maxFrameX    = this.gameObject.maxFrameX;
+        this.maxFrameY    = this.gameObject.maxFrameY;
         this.frameX       = Math.floor(Math.random() * this.maxFrameX);
         this.frameY       = Math.floor(Math.random() * this.maxFrameY);
         // Параметри швидкості
-        this.speedX       = Math.random() * (constants[this.key[0]][this.key[1]].speedXmax - constants[this.key[0]][this.key[1]].speedXmin) + constants[this.key[0]][this.key[1]].speedXmin; 
-        this.speedY       = Math.random() * (constants[this.key[0]][this.key[1]].speedYmax - constants[this.key[0]][this.key[1]].speedYmin) + constants[this.key[0]][this.key[1]].speedYmin; 
+        this.speedX       = Math.random() * (this.gameObject.speedXmax - this.gameObject.speedXmin) + this.gameObject.speedXmin; 
+        this.speedY       = Math.random() * (this.gameObject.speedYmax - this.gameObject.speedYmin) + this.gameObject.speedYmin; 
         // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
-        this.borderX      = constants[this.key[0]][this.key[1]].borderX;
-        this.borderY      = constants[this.key[0]][this.key[1]].borderY;
+        this.borderX      = this.gameObject.borderX;
+        this.borderY      = this.gameObject.borderY;
         // параметри відзеркалення персонажа
-        this.isFacingLeft = constants[this.key[0]][this.key[1]].isFacingLeft; 
+        this.isFacingLeft = this.gameObject.isFacingLeft; 
     };
+    
+    // функція для отримання обєкту за вказаними ключем
+    getGameObject(constants, keyArray) {
+        let value = constants;
+        for (const key of keyArray) {
+            value = value[key];
+        }
+        return value;
+    }
 
     reset() {
-        this.width     = this[`${this.key[1]}Width`] * this.size * this.game.scaleX;
-        this.height    = this[`${this.key[1]}Height`] * this.size * this.game.scaleY;
-        this.radius    = constants[this.key[0]][this.key[1]].radius * this.game.scale;
+        this.width     = this[`${this.objectName}Width`] * this.size * this.game.scaleX;
+        this.height    = this[`${this.objectName}Height`] * this.size * this.game.scaleY;
+        this.radius    = this.gameObject.radius * this.game.scale;
         this.x         = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y         = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
     };
@@ -63,10 +68,10 @@ export default class GameObject {
         if(this.isFacingLeft){
             ctx.drawImage( this.image, 
                            // параметри кадру, який обераємо
-                           this.frameX * this[`${this.key[1]}Width`], 
-                           this.frameY * this[`${this.key[1]}Height`], 
-                           this[`${this.key[1]}Width`], 
-                           this[`${this.key[1]}Height`], 
+                           this.frameX * this[`${this.objectName}Width`], 
+                           this.frameY * this[`${this.objectName}Height`], 
+                           this[`${this.objectName}Width`], 
+                           this[`${this.objectName}Height`], 
                            // параметри кадру, де буде розміщений і які розміри буде мати
                            this.x - this.width * .5, 
                            this.y - this.height * .8, 
@@ -77,10 +82,10 @@ export default class GameObject {
             ctx.scale     (-1, 1);
             ctx.drawImage ( this.image, 
                             // параметри кадру, який обераємо
-                            this.frameX * this[`${this.key[1]}Width`], 
-                            this.frameY * this[`${this.key[1]}Height`], 
-                            this[`${this.key[1]}Width`], 
-                            this[`${this.key[1]}Height`], 
+                            this.frameX * this[`${this.objectName}Width`], 
+                            this.frameY * this[`${this.objectName}Height`], 
+                            this[`${this.objectName}Width`], 
+                            this[`${this.objectName}Height`], 
                             // параметри кадру, де буде розміщений і які розміри буде мати
                             -(this.x - this.width * .5) - this.width,          // відображаємо зображення в дезркальному вигляді по осі X
                             this.y - this.height * .8,

@@ -1,17 +1,24 @@
+import { findGameObject }           from "./constants.js";
 class Layer {
-    constructor(image, width, height){
-        // підключення зображення заднього фону 
-        this.image         = image;
+    constructor(game, key){
+        // початкові параметри 
+        this.game          = game;
+        this.layerObject   = findGameObject(this.game.data, key);
+        this.layerName     = this.layerObject.name;
+        this.level         = this.layerObject.level;
+        // підключаємо зображення
+        this.image         = new Image;
+        this.image.src     = `images/${this.layerName}.png`;
         // параметри початквого розміру зображення заднього фону 
-        this.width         = width;
-        this.height        = height;
+        this.width         = this.game.width;
+        this.height        = this.game.height;
         // параметри початкового розміщення на полотні
         this.x             = 0;
         this.y             = 0;
     }   
-    reset(width, height){
-        this.width         = width;
-        this.height        = height;
+    reset(){
+        this.width         = this.game.width;
+        this.height        = this.game.height;
     }
     draw(ctx){
         ctx.drawImage(this.image, 
@@ -25,24 +32,18 @@ class Layer {
 export class Background { 
     constructor(game){
         this.game               = game;
-        this.constants          = this.game.constants;
         // підключаємо задній фон вигляд - ЛІС 
-        this.Image1             = document.getElementById('background');
-        this.Image2             = document.getElementById('overlay')
-        // параметри початквого розміру зображення для заднього фону
-        this.layerWidth         = this.game.width;
-        this.layerHeight        = this.game.height;
-         
-        // підключаємо class Layer з його параметрами  і функціями
-        this.layer1             = new Layer (this.Image1, this.layerWidth, this.layerHeight);
-        this.layer2             = new Layer (this.Image2, this.layerWidth, this.layerHeight);
-        // поміщаємо шари заднього фону до обєкту this.backgroundLayers
-        this.backgroundLayers   = [this.layer1, this.layer2];
+        this.keys               = ['forest', 'overlay']
+        this.backgroundLayers   = [];
+        for (const key of this.keys) {
+          this.layer = new Layer(this.game, key);
+          this.backgroundLayers.push(this.layer);
+        }
     }  
     
     reset(){
         // знаходимо в нашому масиві шар і запускаємо функцію reset() даного шару
-        this.backgroundLayers.forEach(layer => layer.reset(this.game.width, this.game.height)); 
+        this.backgroundLayers.forEach(layer => layer.reset()); 
     }
 }
 

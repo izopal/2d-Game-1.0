@@ -1,5 +1,4 @@
 import GameObject   from './GameObject.js';
-import constants    from './constants.js';
 import InputHandler from './input.js';
 
 export default class Player extends GameObject {
@@ -19,7 +18,7 @@ export default class Player extends GameObject {
         super.reset();
         this.x             = this.game.width * .5;
         this.y             = this.game.height * .5;
-        this.speedModifier = constants[this.key[0]][this.key[1]].speedModifier * this.scale;
+        this.speedModifier = this.gameObject.speedModifier * this.scale;
     };
 
     update(){

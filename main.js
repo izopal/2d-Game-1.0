@@ -1,79 +1,69 @@
-import constants                    from "./constants.js";
-import { findKey }                  from "./constants.js";
+import data                         from "./constants.js";
+import { findGameObject }           from "./constants.js";
 import { Background }               from './layer.js';
 import Obstacle                     from './obstacle.js';
 import Player                       from './player.js';
 import Egg                          from './egg.js';
 import Enemy                        from './enemy.js';
-import GameObject from "./GameObject.js";
-
 
 
 window.addEventListener('load',  function() { 
     const canvasMS         = document.getElementById('canvasMS');
     const body             = document.body;
     const mobilScreen      = window.innerWidth < window.innerHeight;
-    const fullScreen       = constants.game.canvasWidth === window.innerWidth && constants.game.canvasHeight === window.innerHeight;
+    const fullScreen       = data.game.canvasWidth === window.innerWidth && data.game.canvasHeight === window.innerHeight;
 
     const ctx              = canvasMS.getContext('2d', { willReadFrequently: true });
           ctx.fillStyle    = 'none';
           ctx.lineStroke   = 3;
           ctx.strokeStyle  = 'red';
-    
-
-    // Проходимося по ключам обєкта constants та створюємо <img> елементи тільки для тих які мають ключ image: true
-    // for (const key in constants) {
-    //     if (constants[key].image === true) {
-    //         const img = document.createElement('img');
-    //         img.id    = key;
-    //         img.src   = `./images/${key}.png`;
-    //         img.alt   = '';
-
-    //         body.appendChild(img);                 // Додаємо створений <img> елемент до <body>
-    //     }
-    // }
 
     class Game {
-        constructor(canvasMS, constants){
-            // перетворюємо обєкт constants в масив
-            this.data              = constants;
-            this.constants         = Object.values(constants);
+        constructor(canvasMS){
+            this.data              = data;      
+            // ключі для гри 
+            this.gameKey           = 'game';
+            this.playerKey         = 'bull';
+            this.enemyKey          = 'toad';
+            this.eggKey            = 'egg';
+            this.obstacleKey       = 'obstacle';
+            this.layer             = 'layer1';
+            this.constants         = findGameObject(this.data, this.gameKey);
             // параметри кмов різних пристроїв
             this.canvas            = canvasMS;
-            canvasMS.width         = constants.game.canvasWidth;
-            canvasMS.height        = constants.game.canvasHeight;
-            // параметри масштабування
-            this.scaleX            = canvasMS.width / constants.background.layer1.width;
-            this.scaleY            = canvasMS.height / constants.background.layer1.height;
-            this.scale             = Math.min(this.scaleX, this.scaleY);
+            canvasMS.width         = this.constants.canvasWidth;
+            canvasMS.height        = this.constants.canvasHeight;
             // параметри полотна
-            this.width              = canvasMS.width;
-            this.height             = canvasMS.height;
-            this.topMargin          = constants.game.topMargin * this.scaleY;
-            // параметри швидкості відображення кадрів
-            this.fps                = constants.game.fps;
-            this.frameInterval      = constants.game.timeInterval / this.fps;
-            this.frameTimer         = 0;
+            this.width             = canvasMS.width;
+            this.height            = canvasMS.height;
             // підключаємо задні фони
-            this.background         = new Background(this);
-            // підключаємо модуль персонажа
-            this.players           = [];
+            this.background        = new Background(this);
+            // параметри масштабування
+            this.scaleX            = canvasMS.width / findGameObject(this.data, this.layer).width;
+            this.scaleY            = canvasMS.height / findGameObject(this.data, this.layer).height;
+            this.scale             = Math.min(this.scaleX, this.scaleY);
+            this.topMargin         = this.constants.topMargin * this.scaleY;
+            // параметри швидкості відображення кадрів
+            this.fps               = this.constants.fps;
+            this.frameInterval     = this.constants.timeInterval / this.fps;
+            this.frameTimer        = 0;
             // параметри першкод
-            this.numberOffObstacles = 10;
-            this.distanceBuffer     = 100;     //параметр буферної зони(мінімальна відстань між перешкодами) між перешкодами
-            this.obstacles          = [];
+            this.players           = [];
+            this.obstacles         = [];
+            this.eggs              = [];
+            this.enemies           = []; 
             // параметри яїчок
-            this.eggInterval        = this.constants[4].timeInterval/this.fps;
-            this.eggTimer           = 0;
-            this.eggs               = [];
+            // this.eggInterval        = constants[4].timeInterval/this.fps;
+            // this.eggInterval       = 1000/this.fps;
+            // this.eggTimer          = 0;
             // параметри ворогів
-            this.enemyInterval      = this.constants[5].timeInterval/this.fps;
-            this.enemyTimer         = 0;
-            this.enemies            = []; 
+            // this.enemyInterval      = constants[5].timeInterval/this.fps;
+            // this.enemyInterval     = 500/this.fps;
+            // this.enemyTimer        = 0;
             // параметри всіх обєктів
-            this.allGameObjects = [...this.players, ...this.obstacles, ...this.eggs, ...this.enemies];  // створюємо обєкт з усіма елементами які потрібно сортувати
+            this.allGameObjects    = [...this.players, ...this.obstacles, ...this.eggs, ...this.enemies];  // створюємо обєкт з усіма елементами які потрібно сортувати
             // параметри конструктора
-            this.debug              = false;
+            this.debug             = false;
         }
 
         resize(width, height){
@@ -81,13 +71,13 @@ window.addEventListener('load',  function() {
             canvasMS.width   =  width;
             canvasMS.height  =  height;
             // параметри масштабування
-            this.scaleX            = canvasMS.width / constants.background.layer1.width;
-            this.scaleY            = canvasMS.height / constants.background.layer1.height;
+            this.scaleX      = canvasMS.width / findGameObject(this.data, this.layer).width;
+            this.scaleY      = canvasMS.height / findGameObject(this.data, this.layer).height;
             this.scale       = Math.min(this.scaleX, this.scaleY);
             // обновлюємо значення парметрів
             this.width       = canvasMS.width; 
             this.height      = canvasMS.height;
-            this.topMargin   = constants.game.topMargin * this.scaleY;
+            this.topMargin   = this.constants.topMargin * this.scaleY;
             // обновлюємо значення модулів
             this.background.reset();
             this.allGameObjects.forEach(gameObject => gameObject.reset())
@@ -102,74 +92,31 @@ window.addEventListener('load',  function() {
             return [(distance < sumOffRadius), distance, sumOffRadius, dx, dy]
         };
 
-       
-        
-
-
-
-        addPlayer(){
-            const playerKey1 = "";
-            const playerKey2 = "bull";
-            const playerPath = findKey(constants, playerKey1, playerKey2, "");
-            this.player      = new Player(this, `${playerPath}`);
-            if(this.player.level.includes(constants.game.level) &&
-            this.players.length < this.player.number) 
-            this.players.push(this.player);
-
-          
-        };  
-        addEnemy(){
-            const enemyKey1 = "";
-            const enemyKey2 = "toad";
-            const enemyPath = findKey(constants, enemyKey1, enemyKey2, "");
-            this.enemy      = new Enemy (this, `${enemyPath}`);
-            if(this.enemy.level.includes(constants.game.level) &&
-            this.enemies.length < this.enemy.number) 
-            this.enemies.push(this.enemy);
+        addGameObject(Class, array, key) {
+            const gameObject = new Class (this, key);
+            if (gameObject.level.includes(this.constants.level) && array.length < gameObject.number)
+            array.push(gameObject);
         }
-        addEgg(){
-            const eggKey1 = "";
-            const eggKey2 = "egg";
-            const eggPath = findKey(constants, eggKey1, eggKey2, "");
-            this.egg      = new Egg (this, `${eggPath}`);
-            if(this.egg.level.includes(constants.game.level) &&
-                this.eggs.length < this.egg.number) 
-                this.eggs.push(this.egg); 
-        };
-        // addObstacle(){
-        //     const obstacleKey1 = "";
-        //     const obstacleKey2 = "obstacle";
-        //     const obstaclePath = findKey(constants, obstacleKey1, obstacleKey2, "");
-        //     console.log(obstaclePath)
-        //     this.obstacle      = new Obstacle (this, `${obstaclePath}`);
-        //     if(this.obstacle.level.includes(constants.game.level) &&
-        //         this.obstacles.length < this.obstacle.number) 
-        //         this.obstacles.push(this.obstacle); 
-        // };
-
-
-
-        init(){
-            // умова щоб при генерації перешкод вони не перекривалися одна з одною
-            // const obstacleKey = this.addKey("obstacle")
-            const obstacleKey1 = "";
-            const obstacleKey2 = "obstacle";
-            const obstaclePath = findKey(constants, obstacleKey1, obstacleKey2, "");
-    
+        // Викликаємо функцію для додавання обєктів
+        addPlayer() {this.addGameObject(Player, this.players, this.playerKey)};
+        addEnemy()  {this.addGameObject(Enemy,  this.enemies, this.enemyKey)};
+        addEgg()    {this.addGameObject(Egg,    this.eggs,    this.eggKey)};
+       
+        addObstacle(){
+            this.obstacle      = new Obstacle (this, this.obstacleKey);
             let attempts = 0;
-          
+            // умова щоб при генерації перешкод вони не перекривалися одна з одною
             while (
-                   this.obstacles.length < this.numberOffObstacles       && 
+                   this.obstacles.length < this.obstacle.number && 
                    attempts < 500){
                
-                        let firstObstacle   = new Obstacle (this, `${obstaclePath}`);
-                        console.log(firstObstacle)
+                        let firstObstacle   = new Obstacle (this, this.obstacleKey);
                         let overlap         = false;
                         this.obstacles.forEach(obstacle => {
                             this.dx             = firstObstacle.x - obstacle.x
                             this.dy             = firstObstacle.y - obstacle.y;
                             this.distance       = Math.hypot(this.dy, this.dx);
-                            this.sumOffRadius   = firstObstacle.radius + obstacle.radius + this.distanceBuffer;
+                            this.sumOffRadius   = firstObstacle.radius + obstacle.radius + this.obstacle.distanceBuffer;
                             if(this.distance < this.sumOffRadius) overlap = true;
                         });
                         if(!overlap)
@@ -188,10 +135,12 @@ window.addEventListener('load',  function() {
             
             this.background.backgroundLayers[1].draw(ctx);
         
-        }
+        };
+        
         update(){
             this.allGameObjects.forEach(object => object.update());
-        }
+        };
+
         render(ctx, deltaTime, constants){
             if (this.frameTimer > this.frameInterval) {
                 ctx.clearRect(0, 0, canvasMS.width, canvasMS.height);
@@ -202,9 +151,9 @@ window.addEventListener('load',  function() {
             this.frameTimer += deltaTime;
 
             this.addPlayer()
-                this.addEgg();
-                this.addEnemy();
-                // this.addObstacle()
+            this.addEgg();
+            this.addEnemy();
+            this.addObstacle()
 
             // інтервал появи яїчок
             // if(this.eggTimer > this.eggInterval ){
@@ -222,8 +171,7 @@ window.addEventListener('load',  function() {
         }
     }
 
-    const game = new Game(canvasMS, constants);
-    game.init();
+    const game = new Game(canvasMS);
     // console.log(game);
 
     let lastTime = 0 

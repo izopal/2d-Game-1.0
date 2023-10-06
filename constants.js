@@ -1,5 +1,5 @@
 
-const constants = { game:     { name:                 'game',
+const data =      { game:     { name:                 'game',
                                 level:                1,
                                 maxLevel:             20,
                                 canvasWidth:          window.innerWidth,
@@ -19,7 +19,7 @@ const constants = { game:     { name:                 'game',
                                                      level:  [1],
                                                      width:  1280,
                                                      height: 720 },
-                                           overlay: {name:   overlay,
+                                           overlay: {name:   'overlay',
                                                      image:  true,
                                                      level:  [1],
                                                      width:  1280,
@@ -28,7 +28,7 @@ const constants = { game:     { name:                 'game',
                     }, 
 
 // =============================================================================================>
-                    player:    { bull: { name:               'bull',
+                    player:    { bull: { name:                 'bull',
                                          image:                true,
                                          isFacingLeft:         true,
                                          level:                [1, 2, 3, 4, 5, 6], // Масив можливих значень level  
@@ -47,7 +47,7 @@ const constants = { game:     { name:                 'game',
                     },
 
 // =============================================================================================>
-                    obstacle:  { obstacle: {name:                 'grass',
+                    obstacle:  { obstacle: {name:                 'obstacle',
                                             image:                true,
                                             isFacingLeft:         false,
                                             level:                [1, 3],
@@ -115,36 +115,35 @@ const constants = { game:     { name:                 'game',
                                         borderY:              .2 },
                       },
 };
-export default constants;
+export default data;
 
 
-// Функція пошуку шляху до обєкта за вказаним ключем
-const targetKey1 ='';
-const targetKey2 = 'bull'
+// Функція пошуку  значення обєкта за вказаним ключем
+const key = 'bull'
 
-export  function findKey(constants, targetKey1, targetKey2, namePath) {
-          targetKey1 = targetKey1 || targetKey2;
-          const stack = [{ obj: constants, path: namePath }];
-          const targetKey = `${targetKey2}`;
+export  function findGameObject(obj, targetKey) {
+  let stack     = [obj] ;
+ 
+  while (stack.length > 0) {
+    let value = stack.pop();                                             // отримуємо  послідній елемент в масиві
+    for (const key in value) {
+     
+      if (key === targetKey){
+          const result = findGameObject(value[key], targetKey);
+          if (result) return result;
+          return value[key];               
+      };
 
-          while (stack.length > 0) {
-            const { obj, path } = stack.pop();                           // отримуємо  послідній елемент в масиві
-            for (const key in obj) {
-              const currentPath = (path) ? `${path}.${key}` : key;
-            
-              if (key === targetKey1){
-                  const result = findKey(obj[key], targetKey, targetKey, currentPath);
-                  if (result) return result;
-                  return currentPath;               
-              };
-
-              if (typeof obj[key] === 'object') stack.push({ obj: obj[key], path: currentPath });        // якщо даний ключ обєкт ми його додаємо до нашого масиву
-            }
-          }
-          return null;
-        }
-          
-        const foundPath = findKey(constants, targetKey1, targetKey2, '');
-        console.log(foundPath)
+      if (typeof value[key] === 'object') stack.push(value[key]);        // якщо даний ключ обєкт ми його додаємо до нашого масиву
+    }
+  }
+  return null;
+}
+  
+// const foundPath = findGameObject(constants, key);
+// console.log(foundPath)
 
     
+      
+
+       
