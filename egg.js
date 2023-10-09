@@ -56,6 +56,7 @@ export default class Egg extends GameObject {
         // Поява події при дотику
         if(this.hatchTimer > this.hatchInterval){
             this.markedForDelition = true;
+            this.game.addGameObject(this.game.larvas, this.game.larvaKey, this.x, this.y);
             this.game.removeGameObject();
         } else this.hatchTimer += deltaTime;
     }

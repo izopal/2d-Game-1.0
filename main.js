@@ -126,17 +126,17 @@ window.addEventListener('load',  function() {
             return [(distance < sumOffRadius), distance, sumOffRadius, dx, dy]
         };
        
-        addGameObject(array, key) {
+        addGameObject(array, key, x, y) {
             const Class          = findGameObject(this.data, key).class;
-            const gameObject     = new  Class (this, key);
+            const gameObject     = new  Class (this, key, x, y);
             if ( gameObject.level.includes(this.game.level) && array.length < gameObject.number){
                 array.push(gameObject);
             }; 
         };
 
         removeGameObject(){
-            this.eggs = this.eggs.filter(obj => !obj.markedForDelition);
-            this.addGameObject(this.larvas, this.larvaKey, deltaTime);
+            this.eggs   = this.eggs.filter(obj => !obj.markedForDelition);
+            this.larvas = this.larvas.filter(obj => !obj.markedForDelition);
         };
 
         addObstacle(){
@@ -182,8 +182,8 @@ window.addEventListener('load',  function() {
         render(ctx, deltaTime){
             // Викликаємо функцію для додавання обєктів
            
-           this.addGameObject(this.players, this.playerKey, deltaTime);
-           this.addGameObject(this.enemies, this.enemyKey, deltaTime);
+           this.addGameObject(this.players, this.playerKey);
+           this.addGameObject(this.enemies, this.enemyKey);
            
          
            

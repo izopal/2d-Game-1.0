@@ -113,7 +113,7 @@ const data =      { game:     { name:                 'game',
                                         isFacingLeft:         true,
                                         markedForDelition:    false,
                                         level:                [1, 3, 8], // Масив можливих значень level  
-                                        number:               0,
+                                        number:               10,
 
                                         
                                         width:                150 / 1,

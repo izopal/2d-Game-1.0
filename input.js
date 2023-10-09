@@ -7,7 +7,7 @@ export default class InputHandler {
                         y:       this.height * .5 };
 
         fullscreenButton.addEventListener('click',     this.game.toggleFullscreen);
-        fullscreenButton.addEventListener('mousedown', this.game.toggleFullscreen);
+        fullscreenButton.addEventListener('touchstart', this.game.toggleFullscreen);
       
         // ==================== Блок зміни розмірів екрану =======================>
         window.addEventListener('resize', ( ) => {
@@ -43,7 +43,7 @@ export default class InputHandler {
             
         // ==================== Блок керування  touchPad=======================>
         // натиснули 
-        canvasMS.addEventListener('touchstart', e => {
+        canvasMS.addEventListener('touchstart', e => { 
             this.mouse.pressed = true;
             this.mouse.x = e.changedTouches[0].pageX;
             this.mouse.y = e.changedTouches[0].pageY;
