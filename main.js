@@ -136,6 +136,7 @@ window.addEventListener('load',  function() {
 
         removeGameObject(){
             this.eggs = this.eggs.filter(obj => !obj.markedForDelition);
+            this.addGameObject(this.larvas, this.larvaKey, deltaTime);
         };
 
         addObstacle(){
@@ -184,7 +185,7 @@ window.addEventListener('load',  function() {
            this.addGameObject(this.players, this.playerKey, deltaTime);
            this.addGameObject(this.enemies, this.enemyKey, deltaTime);
            
-           this.addGameObject(this.larvas, this.larvaKey, deltaTime);
+         
            
            this.addObstacle()
            
