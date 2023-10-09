@@ -1,3 +1,10 @@
+import Obstacle                     from './obstacle.js';
+import Player                       from './player.js';
+import Egg                          from './egg.js';
+import Enemy                        from './enemy.js';
+import Larva                        from './larva.js';
+
+
 
 const data =      { game:     { name:                 'game',
                                 level:                1,
@@ -29,8 +36,10 @@ const data =      { game:     { name:                 'game',
 
 // =============================================================================================>
                     player:    { bull: { name:                 'bull',
+                                         class:                Player,
                                          image:                true,
                                          isFacingLeft:         true,
+                                         markedForDelition:    false,     
                                          level:                [1, 2, 3, 4, 5, 6], // Масив можливих значень level  
                                          number:               1,
                                          
@@ -48,6 +57,7 @@ const data =      { game:     { name:                 'game',
 
 // =============================================================================================>
                     obstacle:  { obstacle: {name:                 'obstacle',
+                                            class:                Obstacle,
                                             image:                true,
                                             isFacingLeft:         false,
                                             level:                [1, 3],
@@ -65,15 +75,17 @@ const data =      { game:     { name:                 'game',
                                             dx:                   0, 
                                             dy:                   0,
 
-                                            distanceBuffer:       100},
+                                            distanceBuffer:       200},
                     },
                     
 // =============================================================================================>
                       enemy:  { toad:  {name:                 'toad',
+                                        class:                Enemy,
                                         image:                true,
                                         isFacingLeft:         true,
+                                        markedForDelition:    false,
                                         level:                [1, 3, 8], // Масив можливих значень level  
-                                        number:               5,
+                                        number:               4,
 
                                         width:                140 / 1,
                                         height:               1040 / 4,
@@ -87,19 +99,45 @@ const data =      { game:     { name:                 'game',
                                         speedYmin:            0, 
                                         speedYmax:            0,
 
+                                        timer:                0,
+                                        interval:             500,
+
                                         distanceBuffer:       20,
-                                        timeInterval:         5000,
                                         // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
                                         borderX:              .5,
                                         borderY:              .2},
+
+                                larva: {name:                 'larva',
+                                        class:                Larva,
+                                        image:                true,
+                                        isFacingLeft:         true,
+                                        markedForDelition:    false,
+                                        level:                [1, 3, 8], // Масив можливих значень level  
+                                        number:               0,
+
+                                        
+                                        width:                150 / 1,
+                                        height:               300 / 2,
+                                        size:                 .25,
+                                        maxFrameX:            1, 
+                                        maxFrameY:            2,
+                                        radius:               30,
+
+                                        speedXmax:            0, 
+                                        speedXmin:            0, 
+                                        speedYmin:            1, 
+                                        speedYmax:            2,
+                                  },
                       },
 
 // =============================================================================================>
                       bonus:  {egg:     {name:                 'egg',
+                                        class:                Egg,
                                         image:                true,
                                         isFacingLeft:         true,
+                                        markedForDelition:    false,
                                         level:                [1, 2, 4], // Масив можливих значень level  
-                                        number:               10,
+                                        number:               5,
                                         
                                         width:                110,
                                         height:               135,
@@ -108,19 +146,23 @@ const data =      { game:     { name:                 'game',
                                         maxFrameY:            1,
                                         radius:               20,
 
+                                        timer:                0,
+                                        interval:             3000,
+
                                         distanceBuffer:       20,
-                                        timeInterval:         500,
                                         // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
                                         borderX:              .5,
                                         borderY:              .2 },
+                                        // параметри інтервалів
+                                        hatchTimer:           0,
+                                        hatchInterval:        10000,
+
                       },
 };
 export default data;
 
 
 // Функція пошуку  значення обєкта за вказаним ключем
-const key = 'bull'
-
 export  function findGameObject(obj, targetKey) {
   let stack     = [obj] ;
  
@@ -139,11 +181,3 @@ export  function findGameObject(obj, targetKey) {
   }
   return null;
 }
-  
-// const foundPath = findGameObject(constants, key);
-// console.log(foundPath)
-
-    
-      
-
-       

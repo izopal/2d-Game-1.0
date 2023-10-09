@@ -3,7 +3,8 @@ import GameObject from './GameObject.js';
 export default class Enemy extends GameObject {
     constructor(game, key) {
         super(game, key);
-        this.x    = this.game.width + this.width + Math.random() * this.game.width * .5;
+        this.collisionObject = [...this.game.players, ...this.game.obstacles];
+        this.x               = this.game.width + this.width + Math.random() * this.game.width * .5;
     }
     reset(){
         super.reset()
@@ -29,8 +30,7 @@ export default class Enemy extends GameObject {
         else if(this.y > this.game.height - this.height * this.borderY ) this.y = this.game.height -  this.height * this.borderY  ; 
 
         // блок зіткнення з ворогів і першкодами
-        let collisionObject = [...this.game.players, ...this.game.obstacles];
-        collisionObject.forEach(object => {
+        this.collisionObject.forEach(object => {
             let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, object);
 
             if(collision){

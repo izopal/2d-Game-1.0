@@ -3,7 +3,7 @@ import InputHandler from './input.js';
 
 export default class Player extends GameObject {
     constructor(game, key){
-        super(game, key)
+        super(game, key);
         this.input         = new InputHandler(this.game);
         // параметри розміщення і розмірів тіні персонажа
         this.x             = this.game.width * .5;
@@ -78,10 +78,8 @@ export default class Player extends GameObject {
             ctx.stroke      ();   
 
             // малюємо квадрат
-            this.playerX    = this.x - this.width * .5;
-            this.playerY    = this.y - this.height * .8;
-            this.rectX      = this.playerX + this.width * .25;   // початкова координата X розміщення;
-            this.rectY      = this.playerY + this.height * .25;  // початкова координата Y розміщення;
+            this.rectX      = this.colisionX + this.width * .25;   // початкова координата X розміщення;
+            this.rectY      = this.colisionY + this.height * .25;  // початкова координата Y розміщення;
             this.rectWidth  = this.width  * .5;
             this.rectHeight = this.height * .6;
             ctx.strokeRect (this.rectX,  

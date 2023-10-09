@@ -1,22 +1,32 @@
 import GameObject from './GameObject.js';
+import larva from './larva.js';
 
 export default class Egg extends GameObject {
     constructor(game, key) {
         super(game, key);
+        // this.collisionObject = this.game.all.filter(item => item !== Egg)
+        this.collisionObject = [...this.game.players, ...this.game.obstacles, ...this.game.enemies];
+        this.hatchTimer = 0;
+        this.hatchInterval = 10000;
     }
     reset(){
         super.reset()
     }
     draw(ctx){
         super.draw(ctx)
+        
+            const displayTimer = (this.hatchTimer * .001).toFixed(0)
+            ctx.font       = '30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(displayTimer, this.x, this.y)
+       
     }
-    update(){
+    update(deltaTime){
         // блок зіткнення з границями екрану
         super.update();
 
         // блок зіткнення з персонажем і першкодами і ворогами 
-        let collisionObject = [...this.game.players, ...this.game.obstacles, ...this.game.enemies];
-        collisionObject.forEach(object => {
+        this.collisionObject.forEach(object => {
             let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, object);
             if(collision){
             const unit_x = dx / distance || 0;
@@ -43,5 +53,10 @@ export default class Egg extends GameObject {
                 }
             }
         }
+        // Поява події при дотику
+        if(this.hatchTimer > this.hatchInterval){
+            this.markedForDelition = true;
+            this.game.removeGameObject();
+        } else this.hatchTimer += deltaTime;
     }
 }

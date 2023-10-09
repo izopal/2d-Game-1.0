@@ -1,3 +1,4 @@
+
 export default class InputHandler {
     constructor(game){
         this.game   = game;
@@ -5,13 +6,15 @@ export default class InputHandler {
                         x:       this.width * .5,
                         y:       this.height * .5 };
 
-        
+        fullscreenButton.addEventListener('click', this.game.toggleFullscreen);
+      
         // ==================== Блок зміни розмірів екрану =======================>
-        window.addEventListener('resize', () => {
+        window.addEventListener('resize', ( ) => {
             this.game.resize(window.innerWidth, window.innerHeight);
         });
         window.addEventListener('orientationchange', () => {
             this.game.resize(window.innerWidth, window.innerHeight);
+            this.game.toggleFullscreen;
         });
         // ==================== Блок керування мишкою =======================>
         // вкл./викл конструктора
