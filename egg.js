@@ -14,13 +14,24 @@ export default class Egg extends GameObject {
     }
     draw(ctx){
         super.draw(ctx)
+            const interval      = (this.hatchInterval  * .1 + 100).toFixed(0) ;
+            const displayTimer  = (this.hatchTimer * .1).toFixed(0)
+            const maxValue      = this.width * .5;
+            const scaleWidth    = ((interval - displayTimer) / interval) * maxValue; 
+            const alpha         = (interval - displayTimer) / interval
         
-            const displayTimer = (this.hatchTimer * .001).toFixed(0)
-            ctx.font       = '30px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(displayTimer, this.x, this.y)
-       
+            let scaleColor = 'green';
+           
+          
+            // Малюємо саму шкалу з врахуванням коліру
+            ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = scaleColor;
+                ctx.fillRect(this.colisionX + maxValue - .1, this.colisionY - 20,   scaleWidth, 10);  // Малюємо шкалу від права до центра
+                ctx.fillRect(this.colisionX + maxValue + .1, this.colisionY - 20, 1-scaleWidth, 10);  // Малюємо шкалу від ліва до центра
+            ctx.restore();
     }
+    
     update(deltaTime){
         // блок зіткнення з границями екрану
         super.update();

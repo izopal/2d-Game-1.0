@@ -7,7 +7,7 @@ export default class Obstacle extends GameObject {
     reset(){
         super.reset()
     }
-    draw(ctx){
+    draw(ctx){ 
         super.draw(ctx)
     }
     update(){

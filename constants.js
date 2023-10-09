@@ -94,8 +94,8 @@ const data =      { game:     { name:                 'game',
                                         maxFrameY:            1,
                                         radius:               30,
 
-                                        speedXmax:            3.5, 
-                                        speedXmin:            .5, 
+                                        speedXmax:            6.5, 
+                                        speedXmin:            1.5, 
                                         speedYmin:            0, 
                                         speedYmax:            0,
 

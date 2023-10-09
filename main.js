@@ -75,6 +75,7 @@ window.addEventListener('load',  function() {
 
 
             this.allGameObjects    = [...this.players, ...this.obstacles, ...this.eggs, ...this.enemies, ...this.larvas];  // створюємо обєкт з усіма елементами які потрібно сортувати
+            
             // параметри конструктора
             this.debug             = false;
         }
@@ -115,8 +116,6 @@ window.addEventListener('load',  function() {
             fullscreenButton.style.fontSize = (20 * this.scale) + 'px';
         
         };
-
- 
         
         checkCollision(a, b){
             const dx           = a.x - b.x; 
@@ -171,13 +170,16 @@ window.addEventListener('load',  function() {
             this.background.backgroundLayers[0].draw(ctx);
           
             this.allGameObjects = [...this.players, ...this.enemies, ...this.eggs, ...this.larvas, ...this.obstacles] || 0;  // створюємо обєкт з усіма елементами які потрібно сортувати
+            // console.log(this.allGameObjects)
             this.allGameObjects.sort((a, b) => a.y - b.y);                               // Сортуємо за координатою y (від меншого до більшого)
             this.allGameObjects.forEach(object => object.draw(ctx));
             
             this.background.backgroundLayers[1].draw(ctx);
         };
         
-        update(deltaTime) {this.allGameObjects.forEach(object => object.update(deltaTime))};
+        update(deltaTime) {
+            this.allGameObjects.forEach(object => object.update(deltaTime));
+        };
 
         render(ctx, deltaTime){
             // Викликаємо функцію для додавання обєктів

@@ -3,8 +3,15 @@ import GameObject from './GameObject.js';
 export default class Enemy extends GameObject {
     constructor(game, key) {
         super(game, key);
-        this.collisionObject = [...this.game.players, ...this.game.obstacles];
+        this.collisionObject = [...this.game.players, ...this.game.obstacles, ...this.game.enemies];
         this.x               = this.game.width + this.width + Math.random() * this.game.width * .5;
+
+        this.vx       = (Math.random() * 4 - 1) * this.scale;
+        this.vy       = (Math.random() * 4 - 1) * this.scale;
+        // параметри розгону частинок
+        this.pushX    = 0;
+        this.pushY    = 0;
+        this.friction = .78;
     }
     reset(){
         super.reset()
@@ -42,23 +49,24 @@ export default class Enemy extends GameObject {
             };
         });
          
-        // Обробка зіткнень з іншими ворогами
-        for (let i = 0; i < this.game.enemies.length; ++i){
-            if (i !== this.indexs) {
-                this.otherEnemy    = this.game.enemies[i];
-                this.dx            = this.otherEnemy.x - this.x;
-                this.dy            = this.otherEnemy.y - this.y;
-                this.distance      = Math.hypot(this.dx, this.dy);
-                this.sumOffRadius  = this.radius + this.otherEnemy.radius
-                if (this.distance < this.sumOffRadius ) {
-                    // Зміна швидкостей після зіткнення
-                    const unit_x = this.dx / this.distance  || 0;
-                    const unit_y = this.dy  /this.distance  || 0;
-                    this.otherEnemy.x = this.x + (this.sumOffRadius + 1) * unit_x;
-                    this.otherEnemy.y = this.y + (this.sumOffRadius + 1) * unit_y;
-                }
+        this.game.larvas.forEach(larva => {
+            let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, larva);
+            this.force    = larva.arealRadius / distance;
+            if(distance < larva.arealRadius){
+                this.angle  = Math.atan2(dy, dx);
+                this.pushX -= Math.cos(this.angle) * this.force;
+                this.pushY -= Math.sin(this.angle) * this.force;
+                this.isFacingLeft = this.pushX > 0 ? false : true;
+                if(collision) {
+                    larva.markedForDelition = true;
+                    this.game.removeGameObject(); 
+                };
             }
-        }
+        });    
+        this.x    += (this.pushX *= this.friction) + this.vx;
+        this.y    += (this.pushY *= this.friction) + this.vy;
+
+
     }
 }
 
