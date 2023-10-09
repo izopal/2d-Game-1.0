@@ -15,7 +15,7 @@ export default class larva extends GameObject {
     }
     update(){
       this.y -= this.speedY;
-      if  (this.y < this.game.topMargin){  
+      if  (this.y < this.game.topMargin){   
         this.markedForDelition = true;
         this.game.removeGameObject(); 
       }

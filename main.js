@@ -138,7 +138,7 @@ window.addEventListener('load',  function() {
             this.eggs   = this.eggs.filter(obj => !obj.markedForDelition);
             this.larvas = this.larvas.filter(obj => !obj.markedForDelition);
         };
-
+ 
         addObstacle(){
             const Class          = findGameObject(this.data, this.obstacleKey).class;
             const distanceBuffer = findGameObject(this.data, this.obstacleKey).distanceBuffer; 

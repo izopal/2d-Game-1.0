@@ -1,4 +1,5 @@
 
+const fullscreenButton         = document.getElementById('fullscreenButton');
 export default class InputHandler {
     constructor(game){
         this.game   = game;
@@ -7,7 +8,9 @@ export default class InputHandler {
                         y:       this.height * .5 };
 
         fullscreenButton.addEventListener('click',     this.game.toggleFullscreen);
-        fullscreenButton.addEventListener('touchstart', this.game.toggleFullscreen);
+        fullscreenButton.addEventListener('touchstart', () => {
+            this.game.toggleFullscreen
+        } );
       
         // ==================== Блок зміни розмірів екрану =======================>
         window.addEventListener('resize', ( ) => {
