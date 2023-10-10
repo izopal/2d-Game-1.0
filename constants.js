@@ -49,6 +49,7 @@ const data =      { game:     { name:                 'game',
                                          maxFrameX:            59, 
                                          maxFrameY:            8,
                                          radius:               40,
+
                                          speedModifier:        20,
                                          // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
                                          borderX:              .25,
@@ -70,16 +71,11 @@ const data =      { game:     { name:                 'game',
                                             maxFrameY:            3,
                                             radius:               40,
 
-                                            speedX:               0, 
-                                            speedY:               0, 
-                                            dx:                   0, 
-                                            dy:                   0,
-
                                             distanceBuffer:       200},
                     },
                     
 // =============================================================================================>
-                      enemy:  { toad:  {name:                 'toad',
+                      enemy:  { toad:  {name:                 'toads',
                                         class:                Enemy,
                                         image:                true,
                                         isFacingLeft:         true,
@@ -91,7 +87,7 @@ const data =      { game:     { name:                 'game',
                                         height:               1040 / 4,
                                         size:                 .65,
                                         maxFrameX:            1, 
-                                        maxFrameY:            1,
+                                        maxFrameY:            4,
                                         radius:               30,
 
                                         speedXmax:            6.5, 
@@ -101,8 +97,8 @@ const data =      { game:     { name:                 'game',
 
                                         timer:                0,
                                         interval:             500,
-
-                                        distanceBuffer:       20,
+                                        
+                                        friction:             .78,
                                         // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
                                         borderX:              .5,
                                         borderY:              .2},
@@ -123,11 +119,12 @@ const data =      { game:     { name:                 'game',
                                         maxFrameY:            2,
                                         radius:               30,
 
-                                        speedXmax:            0, 
-                                        speedXmin:            0, 
-                                        speedYmin:            1, 
-                                        speedYmax:            2,
-                                  },
+                                        speedXmax:            7.5, 
+                                        speedXmin:            -7.5, 
+                                        speedYmax:            8,
+                                        speedYmin:            -2, 
+
+                                        distanceBuffer:       250},
                       },
 
 // =============================================================================================>
@@ -147,16 +144,13 @@ const data =      { game:     { name:                 'game',
                                         radius:               20,
 
                                         timer:                0,
-                                        interval:             3000,
+                                        interval:             1000,
+                                        hatchInterval:        10000,
 
                                         distanceBuffer:       20,
                                         // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
                                         borderX:              .5,
-                                        borderY:              .2 },
-                                        // параметри інтервалів
-                                        hatchTimer:           0,
-                                        hatchInterval:        10000,
-
+                                        borderY:              .2},
                       },
 };
 export default data;

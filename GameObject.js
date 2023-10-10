@@ -25,20 +25,13 @@ export default class GameObject {
         this.radius            = this.gameObject.radius * this.scale;
         this.x                 = Math.random() * (this.game.width - this.radius * 2) + this.radius;
         this.y                 = Math.random() * (this.game.height - this.radius * 2 - this.game.topMargin) + this.game.topMargin;
-        // параметри регулювання руху швидкості персонажа і мишки
-        this.speedX            = this.gameObject.speedX;
-        this.speedY            = this.gameObject.speedY;
-        this.speedModifier     = this.gameObject.speedModifier * this.scale;
-        this.dx                = this.gameObject.dx;
-        this.dy                = this.gameObject.dy;
         // параметри кадрів забраження
         this.maxFrameX         = this.gameObject.maxFrameX;
         this.maxFrameY         = this.gameObject.maxFrameY;
         this.frameX            = Math.floor(Math.random() * this.maxFrameX);
         this.frameY            = Math.floor(Math.random() * this.maxFrameY);
         // Параметри швидкості
-        this.speedX            = Math.random() * (this.gameObject.speedXmax - this.gameObject.speedXmin) + this.gameObject.speedXmin; 
-        this.speedY            = Math.random() * (this.gameObject.speedYmax - this.gameObject.speedYmin) + this.gameObject.speedYmin; 
+        this.speedModifier     = this.gameObject.speedModifier * this.scale;
         // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
         this.borderX           = this.gameObject.borderX;
         this.borderY           = this.gameObject.borderY;
@@ -58,7 +51,7 @@ export default class GameObject {
             value = value[key];
         }
         return value;
-    }
+    };
 
     reset() {
         this.width     = this[`${this.objectName}Width`] * this.size * this.game.scaleX;
@@ -128,5 +121,5 @@ export default class GameObject {
         else if(this.x > this.game.width - this.width * this.borderX)    this.x = this.game.width - this.width * this.borderX;
         if     (this.y < this.game.topMargin)                            this.y = this.game.topMargin;
         else if(this.y > this.game.height - this.height * this.borderY ) this.y = this.game.height -  this.height * this.borderY  ; 
-    }
+    };
 }

@@ -1,4 +1,5 @@
 import { findGameObject }           from "./constants.js";
+
 class Layer {
     constructor(game, key){
         // початкові параметри 
@@ -15,18 +16,20 @@ class Layer {
         // параметри початкового розміщення на полотні
         this.x             = 0;
         this.y             = 0;
-    }   
+    };
+
     reset(){
         this.width         = this.game.width;
         this.height        = this.game.height;
-    }
+    };
+
     draw(ctx){
         ctx.drawImage(this.image, 
                       this.x,
                       this.y,
                       this.width,
                       this.height);
-    }
+    };
 }
 
 export class Background { 
@@ -39,12 +42,11 @@ export class Background {
           this.layer = new Layer(this.game, key);
           this.backgroundLayers.push(this.layer);
         }
-    }  
+    };  
     
     reset(){
-        // знаходимо в нашому масиві шар і запускаємо функцію reset() даного шару
         this.backgroundLayers.forEach(layer => layer.reset()); 
-    }
+    };
 }
 
  

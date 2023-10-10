@@ -1,17 +1,19 @@
+import { findGameObject }           from "./constants.js";
 import GameObject from './GameObject.js';
-import larva from './larva.js';
 
 export default class Egg extends GameObject {
     constructor(game, key) {
         super(game, key);
-        // this.collisionObject = this.game.all.filter(item => item !== Egg)
+        this.egg             = findGameObject(game.data, key);
         this.collisionObject = [...this.game.players, ...this.game.obstacles, ...this.game.enemies];
-        this.hatchTimer = 0;
-        this.hatchInterval = 10000;
-    }
+        this.hatchTimer      = 0;
+        this.hatchInterval   = this.egg.hatchInterval;
+    };
+
     reset(){
         super.reset()
-    }
+    };
+
     draw(ctx){
         super.draw(ctx)
             const interval      = (this.hatchInterval  * .1 + 100).toFixed(0) ;
@@ -30,7 +32,7 @@ export default class Egg extends GameObject {
                 ctx.fillRect(this.colisionX + maxValue - .1, this.colisionY - 20,   scaleWidth, 10);  // Малюємо шкалу від права до центра
                 ctx.fillRect(this.colisionX + maxValue + .1, this.colisionY - 20, 1-scaleWidth, 10);  // Малюємо шкалу від ліва до центра
             ctx.restore();
-    }
+    };
     
     update(deltaTime){
         // блок зіткнення з границями екрану
@@ -70,5 +72,5 @@ export default class Egg extends GameObject {
             this.game.addGameObject(this.game.larvas, this.game.larvaKey, this.x, this.y);
             this.game.removeGameObject();
         } else this.hatchTimer += deltaTime;
-    }
+    };
 }

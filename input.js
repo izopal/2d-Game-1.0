@@ -18,6 +18,7 @@ export default class InputHandler {
         });
         window.addEventListener('orientationchange', () => {
             this.game.resize(window.innerWidth, window.innerHeight);
+            this.game.toggleFullscreen;
         });
         // ==================== Блок керування мишкою =======================>
         // вкл./викл конструктора

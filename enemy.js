@@ -1,29 +1,32 @@
+import { findGameObject }           from "./constants.js";
 import GameObject from './GameObject.js';
 
 export default class Enemy extends GameObject {
     constructor(game, key) {
         super(game, key);
+        this.enemy           = findGameObject(game.data, key);
         this.collisionObject = [...this.game.players, ...this.game.obstacles, ...this.game.enemies];
         this.x               = this.game.width + this.width + Math.random() * this.game.width * .5;
 
-        this.vx       = (Math.random() * 4 - 1) * this.scale;
-        this.vy       = (Math.random() * 4 - 1) * this.scale;
+        this.vx              = (Math.random() * 4 - 1) * this.scaleX;
+        this.vy              = (Math.random() * 4 - 1) * this.scaleY;
         // параметри розгону частинок
-        this.pushX    = 0;
-        this.pushY    = 0;
-        this.friction = .78;
+        this.pushX           = 0;
+        this.pushY           = 0;
+        this.friction        = this.enemy.friction;
     }
+
     reset(){
         super.reset()
-        
-    }
+    };
+
     draw(ctx){
         super.draw(ctx)
-        
-    }
+    };
+
     update(){
         this.isFacingLeft = true; 
-        this.x -= this.speedX;
+        this.x -= Math.random() * (this.enemy.speedXmax - this.enemy.speedXmin) + this.enemy.speedXmin;;
 
         // блок повернення ворогів на початкову позицію
         if(this.x + this.width  < 0){
@@ -51,8 +54,8 @@ export default class Enemy extends GameObject {
          
         this.game.larvas.forEach(larva => {
             let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, larva);
-            this.force    = larva.arealRadius / distance;
-            if(distance < larva.arealRadius){
+            this.force    = larva.distanceBuffer / distance;
+            if(distance < larva.distanceBuffer){
                 this.angle  = Math.atan2(dy, dx);
                 this.pushX -= Math.cos(this.angle) * this.force;
                 this.pushY -= Math.sin(this.angle) * this.force;
@@ -65,8 +68,6 @@ export default class Enemy extends GameObject {
         });    
         this.x    += (this.pushX *= this.friction) + this.vx;
         this.y    += (this.pushY *= this.friction) + this.vy;
-
-
-    }
+    };
 }
 

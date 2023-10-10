@@ -20,18 +20,11 @@ window.addEventListener('load',  function() {
         constructor(canvasMS){
             this.data              = data;      
             // ключі для гри 
-            const objectConfigs = [
-                { array: "players", key: this.playerKey },
-                { array: "enemies", key: this.enemyKey },
-                { array: "larvas", key: this.larvaKey },
-                { array: "eggs", key: this.eggKey },
-            ];
             this.playerKey         = 'bull';
             this.enemyKey          = 'toad';
             this.eggKey            = 'egg';
             this.larvaKey          = 'larva';
             this.obstacleKey       = 'obstacle';
-          
             this.gameKey           = 'game'
             this.layerKey          = 'layer1';
 
@@ -56,23 +49,15 @@ window.addEventListener('load',  function() {
             this.fps               = this.game.fps;
             this.frameInterval     = this.game.timeInterval / this.fps;
             this.frameTimer        = 0;
-          
-           
-            // параметри яїчок
-            // this.eggInterval        = game[4].timeInterval/this.fps;
-            this.eggInterval       = 1000;
-            this.eggTimer          = 0;
-            // параметри ворогів
-            // this.enemyInterval      = game[5].timeInterval/this.fps;
-            // this.enemyInterval     = 500/this.fps;
-            // this.enemyTimer        = 0;
             // параметри всіх обєктів
             this.players           = [];
-            this.enemies           = [];
-            this.eggs              = [];
             this.larvas            = [];
+            this.enemies           = [];
+            this.enemy             = findGameObject(this.data, this.enemyKey)
+            this.eggs              = [];
+            this.egg               = findGameObject(this.data, this.eggKey)
             this.obstacles         = [];
-
+            this.obstacl           = findGameObject(this.data, this.obstacleKey)
 
             this.allGameObjects    = [...this.players, ...this.obstacles, ...this.eggs, ...this.enemies, ...this.larvas];  // створюємо обєкт з усіма елементами які потрібно сортувати
             
@@ -106,15 +91,13 @@ window.addEventListener('load',  function() {
             } else { 
                 document.exitFullscreen();
             }
-}
-     
+        };
 
         // Інформацційне повідомлення кнопки повноекранний режим
         updateButtonSize() {
             const buttonBorderRadius = 20; // Встановлюємо бажане значення для зміщення зверху
             fullscreenButton.style.borderRadius = (buttonBorderRadius * this.scale) + 'px';
             fullscreenButton.style.fontSize = (20 * this.scale) + 'px';
-        
         };
         
         checkCollision(a, b){
@@ -139,28 +122,26 @@ window.addEventListener('load',  function() {
         };
  
         addObstacle(){
-            const Class          = findGameObject(this.data, this.obstacleKey).class;
-            const distanceBuffer = findGameObject(this.data, this.obstacleKey).distanceBuffer; 
-            const number         = findGameObject(this.data, this.obstacleKey).number; 
+            const Class          = this.obstacl.class;
+            const distanceBuffer = this.obstacl.distanceBuffer; 
+            const number         = this.obstacl.number; 
           
             let attempts = 0;
             // умова щоб при генерації перешкод вони не перекривалися одна з одною
             while (
-                   this.obstacles.length < number && 
-                   attempts < 500){
-               
-                        let firstObstacle   = new Class (this, this.obstacleKey);
-                        let overlap         = false;
-                        this.obstacles.forEach(obstacle => {
-                            this.dx             = firstObstacle.x - obstacle.x
-                            this.dy             = firstObstacle.y - obstacle.y;
-                            this.distance       = Math.hypot(this.dy, this.dx);
-                            this.sumOffRadius   = firstObstacle.radius + obstacle.radius + distanceBuffer;
-                            if(this.distance < this.sumOffRadius) overlap = true;
-                        });
-                        if(!overlap)
-                        this.obstacles.push(firstObstacle);
-              
+                this.obstacles.length < number && 
+                attempts < 500){
+                    let firstObstacle   = new Class (this, this.obstacleKey);
+                    let overlap         = false;
+                    this.obstacles.forEach(obstacle => {
+                        this.dx             = firstObstacle.x - obstacle.x
+                        this.dy             = firstObstacle.y - obstacle.y;
+                        this.distance       = Math.hypot(this.dy, this.dx);
+                        this.sumOffRadius   = firstObstacle.radius + obstacle.radius + distanceBuffer;
+                        if(this.distance < this.sumOffRadius) overlap = true;
+                    });
+                    if(!overlap)
+                    this.obstacles.push(firstObstacle);
                 ++attempts;
             }
         };
@@ -170,7 +151,6 @@ window.addEventListener('load',  function() {
             this.background.backgroundLayers[0].draw(ctx);
           
             this.allGameObjects = [...this.players, ...this.enemies, ...this.eggs, ...this.larvas, ...this.obstacles] || 0;  // створюємо обєкт з усіма елементами які потрібно сортувати
-            // console.log(this.allGameObjects)
             this.allGameObjects.sort((a, b) => a.y - b.y);                               // Сортуємо за координатою y (від меншого до більшого)
             this.allGameObjects.forEach(object => object.draw(ctx));
             
@@ -182,38 +162,31 @@ window.addEventListener('load',  function() {
         };
 
         render(ctx, deltaTime){
+            if (this.frameTimer > this.frameInterval) {
+                ctx.clearRect(0, 0, canvasMS.width, canvasMS.height);
+                this.draw(ctx);
+                this.update(deltaTime);
+                this.frameTimer = 0;
+             };
+             this.frameTimer += deltaTime;
+             
             // Викликаємо функцію для додавання обєктів
-           
-           this.addGameObject(this.players, this.playerKey);
-           this.addGameObject(this.enemies, this.enemyKey);
-           
-         
-           
-           this.addObstacle()
-           
-           if (this.frameTimer > this.frameInterval) {
-               ctx.clearRect(0, 0, canvasMS.width, canvasMS.height);
-               this.draw(ctx);
-               this.update(deltaTime);
-               this.frameTimer = 0;
-            };
-            this.frameTimer += deltaTime;
-            
+            this.addGameObject(this.players, this.playerKey);
+            this.addObstacle()
             // інтервал появи яїчок
-            if(this.eggTimer > this.eggInterval){
-                this.addGameObject(this.eggs,    this.eggKey);
-                this.eggTimer = 0;
+            if(this.egg.timer > this.egg.interval){
+                this.addGameObject(this.eggs, this.eggKey);
+                this.egg.timer = 0;
             }else{
-                this.eggTimer += deltaTime;
+                this.egg.timer += deltaTime;
             };
-
             // інтервал появи ворогів
-            // if(this.enemyTimer > this.enemyInterval && this.enemies.length < this.numberOffEnemies){
-            //     this.addEnemy();
-            //     this.enemyTimer = 0;
-            // }else{
-            //     this.enemyTimer += deltaTime;
-            // };
+            if(this.enemy.timer > this.enemy.interval){
+                this.addGameObject(this.enemies, this.enemyKey);
+                this.enemy.timerr = 0;
+            }else{
+                this.enemy.timer += deltaTime;
+            };
         }
     }
 
@@ -228,7 +201,6 @@ window.addEventListener('load',  function() {
         requestAnimationFrame(animate)
     }
     animate(0);
-
 });
 
 
