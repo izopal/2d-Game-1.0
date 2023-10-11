@@ -57,7 +57,7 @@ export default class InputHandler {
                 this.mouse.x = e.changedTouches[0].pageX;
                 this.mouse.y = e.changedTouches[0].pageY;
                 }
-        });
+        }, {passive: true});
         // відпустили 
         canvasMS.addEventListener('touchend', () =>{
             this.mouse.pressed = false;

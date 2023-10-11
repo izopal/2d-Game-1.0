@@ -70,8 +70,7 @@ export default class Enemy extends GameObject {
                 };
             }
         });    
-        if(this.game.score === this.game.scoreLoss) this.game.gameOver = true;
-        console.log(this.game.scoreWin)
+        if(this.game.score <= this.game.scoreLoss) this.game.gameOver = true;
 
         this.x    += (this.pushX *= this.friction) + this.vx;
         this.y    += (this.pushY *= this.friction) + this.vy;

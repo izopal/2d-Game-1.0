@@ -28,7 +28,7 @@ export default class larva extends GameObject {
             this.game.removeGameObject(); 
             this.game.score = this.game.score + this.game.levelDifficulty;
         };
-        if(this.game.score === this.game.scoreWin) this.game.gameOver = true;
+        if(this.game.score >= this.game.scoreWin) this.game.gameOver = true;
 
         // блок зіткнення персонажа з першкодами
         this.collisionObject.forEach(obstacl => {

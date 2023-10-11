@@ -1,7 +1,8 @@
 import Game                         from "./game.js";
 
-const canvasMS       = document.getElementById('canvasMS');
-const ctx            = canvasMS.getContext('2d', { willReadFrequently: true });
+const body             = document.body;
+const canvasMS         = document.getElementById('canvasMS');
+const ctx              = canvasMS.getContext('2d', { willReadFrequently: true });
       ctx.fillStyle    = 'none';
       ctx.lineStroke   = 3;
       ctx.strokeStyle  = 'red';
@@ -22,7 +23,7 @@ function animate (timeStamp){
 }
 
 // Умова обробник події для паузи і перезапуску гри
-window.addEventListener('keydown', e => {
+body.addEventListener('keydown', e => {
     if (e.key === "Enter" && game.gameOver) {
         game.restart();
         animate(0);
@@ -35,6 +36,40 @@ window.addEventListener('keydown', e => {
     };
 });
 
+// ==========================Логіка керування за допомогою тачпада=============================>
+//  блок наведення пальця на екран
+const touchTreshold = 50;
+let touchInProgress = false;
+let touchStartTime  = '';
+let touchEndTime    = '';
+let touchY          = '';
+
+body.addEventListener('touchstart', (e) => {
+    touchInProgress = true;
+    touchStartTime  = e.timeStamp;
+    touchY          = e.changedTouches[0].pageY;
+}); 
+
+//  блок руху пальця на екрані.
+body.addEventListener('touchmove', (e) => {
+    touchInProgress     = false;
+    const swipeDistance = e.changedTouches[0].pageY - touchY;
+    if ((swipeDistance > touchTreshold || swipeDistance <  -touchTreshold) && game.gameOver ) {
+        game.restart();
+        animate(0);
+    };
+    // console.log(e)
+}); 
+
+body.addEventListener('touchend', (e) => {
+    touchEndTime       =  e.timeStamp;
+    const deltaTime    = touchEndTime - touchStartTime;
+    if (deltaTime >= 1000 && !game.gameOver && touchInProgress) {
+        game.isPaused  = !game.isPaused ; // Переключення стану паузи
+        game.statusText.paused(ctx)
+        if (!game.isPaused ) requestAnimationFrame(animate);
+    };
+}); 
 
 
 window.addEventListener('load',  () => { 

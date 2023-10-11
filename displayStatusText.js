@@ -21,12 +21,13 @@ export default class DisplayStatusText {
        
 
 
-        const interval      =  this.game.scoreLoss;  // 50
+        const interval      =  this.game.scoreLoss;  
+        const interval2     =  this.game.scoreLoss;  
         const displayTimer  =  this.game.score
         const maxValue      =  0;
         const scaleWidth    =  100 - displayTimer;
         
-        console.log(displayTimer, interval, this.game.scoreWin )
+        // console.log(displayTimer, interval, this.game.scoreWin )
       
         
         // const alpha         = (interval - displayTimer) / interval
@@ -50,8 +51,8 @@ export default class DisplayStatusText {
          // Інформаційне повідомлення якщо ігра програна/виграна
         if (this.game.gameOver){
             let text = ''
-            if(this.game.score === this.game.scoreLoss)       text = 'Невдача, спробуйте ще раз';
-            else if (this.game.score === this.game.scoreWin)  text = 'Вітаю ви перемогли'; 
+            if(this.game.score <= this.game.scoreLoss)       text = 'Невдача, спробуйте ще раз';
+            else if (this.game.score >= this.game.scoreWin)  text = 'Вітаю ви перемогли'; 
             
             const textWidth   = ctx.measureText(text).width;
             const textX       = (canvasMS.width - textWidth) / 2;
