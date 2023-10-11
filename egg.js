@@ -1,5 +1,5 @@
 import { findGameObject }   from "./constants.js";
-import GameObject           from './GameObject.js';
+import GameObject           from './gameObject.js';
 
 export default class Egg extends GameObject {
     constructor(game, key) {

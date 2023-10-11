@@ -1,4 +1,4 @@
-import GameObject   from './GameObject.js';
+import GameObject   from './gameObject.js';
 import InputHandler from './input.js';
 
 export default class Player extends GameObject {
