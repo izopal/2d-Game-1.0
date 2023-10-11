@@ -4,8 +4,6 @@ import Egg                          from './egg.js';
 import Enemy                        from './enemy.js';
 import Larva                        from './larva.js';
 
-
-
 const data =      { game:     { name:                 'game',
                                 level:                1,
                                 levelDifficulty:      1,
