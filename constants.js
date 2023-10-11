@@ -162,7 +162,6 @@ const data =      { game:     { name:                 'game',
 };
 export default data;
 
-
 // Функція пошуку  значення обєкта за вказаним ключем
 export  function findGameObject(obj, targetKey) {
   let stack     = [obj] ;
