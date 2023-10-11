@@ -6,7 +6,6 @@ class Layer {
         this.game          = game;
         this.layerObject   = findGameObject(this.game.data, key);
         this.layerName     = this.layerObject.name;
-        this.level         = this.layerObject.level;
         // підключаємо зображення
         this.image         = new Image;
         this.image.src     = `images/${this.layerName}.png`;
@@ -35,12 +34,12 @@ class Layer {
 export class Background { 
     constructor(game){
         this.game               = game;
-        // підключаємо задній фон вигляд - ЛІС 
+            // підключаємо задній фон вигляд - ЛІС 
         this.keys               = ['forest', 'overlay']
         this.backgroundLayers   = [];
         for (const key of this.keys) {
-          this.layer = new Layer(this.game, key);
-          this.backgroundLayers.push(this.layer);
+            this.layer = new Layer(this.game, key);
+            this.backgroundLayers.push(this.layer);
         }
     };  
     

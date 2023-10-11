@@ -1,5 +1,5 @@
 import { findGameObject }           from "./constants.js";
-import GameObject from './GameObject.js';
+import GameObject from './gameObject.js';
 
 export default class larva extends GameObject {
     constructor(game, key, x, y) {
@@ -26,9 +26,11 @@ export default class larva extends GameObject {
         if  (this.y < this.game.topMargin){   
             this.markedForDelition = true;
             this.game.removeGameObject(); 
+            this.game.score = this.game.score + this.game.levelDifficulty;
         };
+        if(this.game.score === this.game.scoreWin) this.game.gameOver = true;
 
-    // блок зіткнення персонажа з першкодами
+        // блок зіткнення персонажа з першкодами
         this.collisionObject.forEach(obstacl => {
         let [collision, distance, sumOffRadius, dx, dy] = this.game.checkCollision(this, obstacl);
             if(collision){

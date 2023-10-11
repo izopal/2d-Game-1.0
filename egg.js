@@ -1,5 +1,5 @@
-import { findGameObject }           from "./constants.js";
-import GameObject from './GameObject.js';
+import { findGameObject }   from "./constants.js";
+import GameObject           from './GameObject.js';
 
 export default class Egg extends GameObject {
     constructor(game, key) {
@@ -11,7 +11,8 @@ export default class Egg extends GameObject {
     };
 
     reset(){
-        super.reset()
+        super.reset();
+        this.hatchInterval   = this.egg.hatchInterval;
     };
 
     draw(ctx){
@@ -22,15 +23,15 @@ export default class Egg extends GameObject {
             const scaleWidth    = ((interval - displayTimer) / interval) * maxValue; 
             const alpha         = (interval - displayTimer) / interval
         
-            let scaleColor = 'green';
+            let scaleColor = 'red';
            
           
             // Малюємо саму шкалу з врахуванням коліру
             ctx.save();
                 ctx.globalAlpha = alpha;
-                ctx.fillStyle = scaleColor;
-                ctx.fillRect(this.colisionX + maxValue - .1, this.colisionY - 20,   scaleWidth, 10);  // Малюємо шкалу від права до центра
-                ctx.fillRect(this.colisionX + maxValue + .1, this.colisionY - 20, 1-scaleWidth, 10);  // Малюємо шкалу від ліва до центра
+                ctx.fillStyle   = scaleColor;
+                ctx.fillRect(this.colisionX + maxValue - .1, this.colisionY - 10 * this.scaleY,   scaleWidth, 3 * this.scaleY);  // Малюємо шкалу від права до центра
+                ctx.fillRect(this.colisionX + maxValue + .1, this.colisionY - 10 * this.scaleY, 1-scaleWidth, 3 * this.scaleY);  // Малюємо шкалу від ліва до центра
             ctx.restore();
     };
     
@@ -71,6 +72,7 @@ export default class Egg extends GameObject {
             this.markedForDelition = true;
             this.game.addGameObject(this.game.larvas, this.game.larvaKey, this.x, this.y);
             this.game.removeGameObject();
+            this.hatchTimer = 0
         } else this.hatchTimer += deltaTime;
     };
 }

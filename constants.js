@@ -8,10 +8,19 @@ import Larva                        from './larva.js';
 
 const data =      { game:     { name:                 'game',
                                 level:                1,
+                                levelDifficulty:      1,
                                 maxLevel:             20,
-                                canvasWidth:          window.innerWidth,
+
+                                score:                100,
+                                scoreLoss:            50,
+                                scoreWin:             150,
+
+                                gameOver:             false,  
+                                isPaused:             false,
+                                debug:                false,
+
                                 canvasHeight:         window.innerHeight,
-                                
+                                canvasWidth:          window.innerWidth,
                                 topMargin:            260,
 
                                 fps:                  100,
@@ -28,7 +37,7 @@ const data =      { game:     { name:                 'game',
                                                      height: 720 },
                                            overlay: {name:   'overlay',
                                                      image:  true,
-                                                     level:  [1],
+                                                     level:  [1,2],
                                                      width:  1280,
                                                      height: 720 },
                                   },
@@ -40,7 +49,7 @@ const data =      { game:     { name:                 'game',
                                          image:                true,
                                          isFacingLeft:         true,
                                          markedForDelition:    false,     
-                                         level:                [1, 2, 3, 4, 5, 6], // Масив можливих значень level  
+                                         level:                [1, 3, 4, 5, 6], // Масив можливих значень level  
                                          number:               1,
                                          
                                          width:                5900 / 59,
@@ -81,7 +90,7 @@ const data =      { game:     { name:                 'game',
                                         isFacingLeft:         true,
                                         markedForDelition:    false,
                                         level:                [1, 3, 8], // Масив можливих значень level  
-                                        number:               4,
+                                        number:               5,
 
                                         width:                140 / 1,
                                         height:               1040 / 4,
@@ -91,14 +100,14 @@ const data =      { game:     { name:                 'game',
                                         radius:               30,
 
                                         speedXmax:            6.5, 
-                                        speedXmin:            1.5, 
+                                        speedXmin:            2.5, 
                                         speedYmin:            0, 
                                         speedYmax:            0,
 
                                         timer:                0,
                                         interval:             500,
                                         
-                                        friction:             .78,
+                                        friction:             .88,
                                         // Параметри коригування щоб персонаж не вийшов за межі грального поля. 
                                         borderX:              .5,
                                         borderY:              .2},
@@ -133,7 +142,7 @@ const data =      { game:     { name:                 'game',
                                         image:                true,
                                         isFacingLeft:         true,
                                         markedForDelition:    false,
-                                        level:                [1, 2, 4], // Масив можливих значень level  
+                                        level:                [1, 4], // Масив можливих значень level  
                                         number:               5,
                                         
                                         width:                110,

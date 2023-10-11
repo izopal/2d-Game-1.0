@@ -1,5 +1,5 @@
-
 const fullscreenButton         = document.getElementById('fullscreenButton');
+
 export default class InputHandler {
     constructor(game){
         this.game   = game;
@@ -8,19 +8,18 @@ export default class InputHandler {
                         y:       this.height * .5 };
 
         fullscreenButton.addEventListener('click',     this.game.toggleFullscreen);
-        fullscreenButton.addEventListener('touchstart', () => {
-            this.game.toggleFullscreen
-        } );
-      
+        fullscreenButton.addEventListener('touchstart', () => {this.game.toggleFullscreen}, {passive: true});
+
         // ==================== Блок зміни розмірів екрану =======================>
         window.addEventListener('resize', ( ) => {
             this.game.resize(window.innerWidth, window.innerHeight);
         });
         window.addEventListener('orientationchange', () => {
             this.game.resize(window.innerWidth, window.innerHeight);
-            this.game.toggleFullscreen;
+            this.game.toggleFullscreen();
         });
-        // ==================== Блок керування мишкою =======================>
+
+        // ==================== Блок керування клавіатурою =======================>
         // вкл./викл конструктора
         window.addEventListener('keydown', (e) => {
             if(['D', 'd', 'В', 'в'].includes(e.key)) this.game.debug = !this.game.debug;
@@ -45,13 +44,13 @@ export default class InputHandler {
             this.mouse.pressed = false;
         });
             
-        // ==================== Блок керування  touchPad=======================>
+        // ==================== Блок керування touchPad=======================>
         // натиснули 
         canvasMS.addEventListener('touchstart', e => { 
             this.mouse.pressed = true;
             this.mouse.x = e.changedTouches[0].pageX;
             this.mouse.y = e.changedTouches[0].pageY;
-        });
+        }, { passive: true });
         
         // рух 
         canvasMS.addEventListener('touchmove', e =>{

@@ -1,5 +1,5 @@
 import { findGameObject }           from "./constants.js";
-import GameObject from './GameObject.js';
+import GameObject from './gameObject.js';
 
 export default class Enemy extends GameObject {
     constructor(game, key) {
@@ -7,9 +7,9 @@ export default class Enemy extends GameObject {
         this.enemy           = findGameObject(game.data, key);
         this.collisionObject = [...this.game.players, ...this.game.obstacles, ...this.game.enemies];
         this.x               = this.game.width + this.width + Math.random() * this.game.width * .5;
-
+        this.speedX          =  Math.random() * (this.enemy.speedXmax - this.enemy.speedXmin) + this.enemy.speedXmin
         this.vx              = (Math.random() * 4 - 1) * this.scaleX;
-        this.vy              = (Math.random() * 4 - 1) * this.scaleY;
+        this.vy              = (Math.random() * 4 - 2) * this.scaleY;
         // параметри розгону частинок
         this.pushX           = 0;
         this.pushY           = 0;
@@ -26,8 +26,9 @@ export default class Enemy extends GameObject {
 
     update(){
         this.isFacingLeft = true; 
-        this.x -= Math.random() * (this.enemy.speedXmax - this.enemy.speedXmin) + this.enemy.speedXmin;;
-
+        this.x -= this.speedX;
+        
+       
         // блок повернення ворогів на початкову позицію
         if(this.x + this.width  < 0){
             this.isFacingLeft = true;
@@ -36,6 +37,7 @@ export default class Enemy extends GameObject {
         };
         
         // блок зіткнення з границями екрану
+       
         if     (this.y < this.game.topMargin)                            this.y = this.game.topMargin;
         else if(this.y > this.game.height - this.height * this.borderY ) this.y = this.game.height -  this.height * this.borderY  ; 
 
@@ -61,11 +63,16 @@ export default class Enemy extends GameObject {
                 this.pushY -= Math.sin(this.angle) * this.force;
                 this.isFacingLeft = this.pushX > 0 ? false : true;
                 if(collision) {
+                   
                     larva.markedForDelition = true;
                     this.game.removeGameObject(); 
+                    -- this.game.score;
                 };
             }
         });    
+        if(this.game.score === this.game.scoreLoss) this.game.gameOver = true;
+        console.log(this.game.scoreWin)
+
         this.x    += (this.pushX *= this.friction) + this.vx;
         this.y    += (this.pushY *= this.friction) + this.vy;
     };
